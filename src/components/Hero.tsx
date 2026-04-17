@@ -7,7 +7,7 @@ export default function Hero() {
         {/* Issue label */}
         <FadeIn delay={0}>
           <p className="font-mono text-xs tracking-widest uppercase text-white/30 mb-12">
-            Portfolio — 2025
+            Portfolio — 2026
           </p>
         </FadeIn>
 

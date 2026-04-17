@@ -79,7 +79,7 @@ export default function Contact() {
         <FadeIn delay={400}>
           <div className="mt-20 md:mt-28 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <span className="font-mono text-xs tracking-widest uppercase text-white/20">
-              Adam Grossman — 2025
+              Adam Grossman — 2026
             </span>
             <span className="font-mono text-xs tracking-widest uppercase text-white/20">
               Built in Next.js
