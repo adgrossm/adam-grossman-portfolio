@@ -6,7 +6,7 @@ const ibis = {
   status: "Live",
   statusColor: "text-accent",
   description:
-    "A full-stack web app built for a real golf group — handling scheduling, scoring, leaderboards, and a custom handicap engine built from scratch. We pulled GHIN out entirely and calculate handicaps ourselves, which is the most technically sophisticated piece of the project. Login-protected with Supabase auth, relational database, and real data.",
+    "A full-stack web app built for a real golf group. Handles scheduling, scoring, leaderboards, and a custom handicap engine built from scratch. We pulled GHIN out entirely and calculate handicaps ourselves, which is the most technically sophisticated piece of the project. Login-protected with Supabase auth, relational database, and real data.",
   stack: ["Next.js", "React", "Tailwind CSS", "Supabase", "PostgreSQL"],
   link: "https://ibis-golf-app.vercel.app/",
   featured: true,
@@ -30,7 +30,7 @@ const kraveApps = [
     status: "In Development",
     statusColor: "text-white/40",
     description:
-      "Neon noir aesthetic meets late-night indecision. Krave Out brings the same philosophy to bars and nightlife — currently in active development.",
+      "Neon noir aesthetic meets late-night indecision. Krave Out brings the same philosophy to bars and nightlife. Currently in active development.",
     stack: ["React Native", "Expo", "TypeScript"],
     link: "https://github.com/adgrossm",
     featured: false,
