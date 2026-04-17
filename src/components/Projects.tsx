@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import FadeIn from "./FadeIn";
 
 const ibis = {
@@ -23,17 +25,28 @@ const kraveApps = [
     stack: ["React Native", "Expo", "TypeScript"],
     link: "https://github.com/adgrossm",
     featured: false,
+    mockup: undefined,
+    screenshots: [
+      "/krave/krave1.PNG",
+      "/krave/krave2.PNG",
+      "/krave/krave3.PNG",
+      "/krave/krave4.PNG",
+      "/krave/krave5.PNG",
+      "/krave/krave6.PNG",
+    ],
   },
   {
-    name: "Krave Out",
+    name: "Anywhere But Here",
     tagline: "Bar & nightlife randomizer",
     status: "In Development",
     statusColor: "text-white/40",
     description:
-      "Neon noir aesthetic meets late-night indecision. Krave Out brings the same philosophy to bars and nightlife. Currently in active development.",
+      "Neon noir aesthetic meets late-night indecision. Anywhere But Here brings the same philosophy to bars and nightlife. Currently in active development.",
     stack: ["React Native", "Expo", "TypeScript"],
     link: "https://github.com/adgrossm",
     featured: false,
+    mockup: "/krave-out-mockup.html",
+    screenshots: undefined,
   },
   {
     name: "Krave Pour",
@@ -45,8 +58,54 @@ const kraveApps = [
     stack: ["React Native", "Expo", "TypeScript"],
     link: "https://github.com/adgrossm",
     featured: false,
+    mockup: undefined,
+    screenshots: undefined,
   },
 ];
+
+function ScreenshotCarousel({ screenshots }: { screenshots: string[] }) {
+  const [index, setIndex] = useState(0);
+  return (
+    <div className="w-full flex flex-col items-center gap-2">
+      <div className="relative w-full flex items-center justify-center">
+        <button
+          onClick={() => setIndex((i) => (i - 1 + screenshots.length) % screenshots.length)}
+          className="absolute left-0 z-10 p-1 text-white/40 hover:text-white transition-colors"
+          aria-label="Previous"
+        >
+          ‹
+        </button>
+        {/* Phone frame */}
+        <div className="relative mx-8" style={{ width: "160px" }}>
+          <div className="rounded-[28px] border-2 border-white/20 overflow-hidden bg-black shadow-xl">
+            <img
+              src={screenshots[index]}
+              alt={`Screenshot ${index + 1}`}
+              className="w-full block"
+              style={{ aspectRatio: "9/19.5", objectFit: "cover" }}
+            />
+          </div>
+        </div>
+        <button
+          onClick={() => setIndex((i) => (i + 1) % screenshots.length)}
+          className="absolute right-0 z-10 p-1 text-white/40 hover:text-white transition-colors"
+          aria-label="Next"
+        >
+          ›
+        </button>
+      </div>
+      <div className="flex gap-1">
+        {screenshots.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            className={`w-1.5 h-1.5 rounded-full transition-colors ${i === index ? "bg-accent" : "bg-white/20"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Projects() {
   return (
@@ -152,12 +211,25 @@ export default function Projects() {
           {kraveApps.map((app, i) => (
             <FadeIn key={app.name} delay={i * 100}>
               <div className="bg-[#0a0a0a] p-6 sm:p-8 flex flex-col gap-6 h-full hover:bg-white/[0.03] transition-colors">
-                {/* Placeholder image */}
-                <div className="w-full aspect-video bg-white/5 border border-white/10 flex items-center justify-center">
-                  <span className="font-mono text-[10px] sm:text-xs text-white/20 tracking-widest uppercase text-center px-2">
-                    {app.name} — Image TBD
-                  </span>
-                </div>
+                {/* Mockup, carousel, or placeholder */}
+                {app.screenshots ? (
+                  <ScreenshotCarousel screenshots={app.screenshots} />
+                ) : app.mockup ? (
+                  <div className="w-full aspect-video overflow-hidden border border-white/10 relative">
+                    <iframe
+                      src={app.mockup}
+                      className="absolute inset-0 w-[200%] h-[200%] origin-top-left pointer-events-none"
+                      style={{ transform: "scale(0.5)", transformOrigin: "top left" }}
+                      title={`${app.name} mockup`}
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full aspect-video bg-white/5 border border-white/10 flex items-center justify-center">
+                    <span className="font-mono text-[10px] sm:text-xs text-white/20 tracking-widest uppercase text-center px-2">
+                      {app.name} — Image TBD
+                    </span>
+                  </div>
+                )}
 
                 <div className="flex-1 flex flex-col">
                   <div className="flex items-start justify-between mb-2">
