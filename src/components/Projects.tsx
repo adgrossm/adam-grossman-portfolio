@@ -12,6 +12,15 @@ const ibis = {
   stack: ["Next.js", "React", "Tailwind CSS", "Supabase", "PostgreSQL"],
   link: "https://ibis-golf-app.vercel.app/",
   featured: true,
+  screenshots: [
+    "/ibis/ibis1.png",
+    "/ibis/ibis2.png",
+    "/ibis/ibis3.png",
+    "/ibis/ibis4.png",
+    "/ibis/ibis5.png",
+    "/ibis/ibis6.png",
+    "/ibis/ibis7.png",
+  ],
 };
 
 const kraveApps = [
@@ -27,8 +36,8 @@ const kraveApps = [
     featured: false,
     mockup: undefined,
     screenshots: [
-      "/krave/krave1.PNG",
       "/krave/krave2.PNG",
+      "/krave/krave1.PNG",
       "/krave/krave3.PNG",
       "/krave/krave4.PNG",
       "/krave/krave5.PNG",
@@ -62,6 +71,40 @@ const kraveApps = [
     screenshots: undefined,
   },
 ];
+
+function IbisCarousel({ screenshots }: { screenshots: string[] }) {
+  const [index, setIndex] = useState(0);
+  return (
+    <div className="relative w-full h-full flex items-center justify-center group">
+      <img
+        src={screenshots[index]}
+        alt={`Ibis screenshot ${index + 1}`}
+        className="w-full h-full object-cover"
+      />
+      <button
+        onClick={() => setIndex((i) => (i - 1 + screenshots.length) % screenshots.length)}
+        className="absolute left-2 p-2 text-2xl text-white/60 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+      >
+        ‹
+      </button>
+      <button
+        onClick={() => setIndex((i) => (i + 1) % screenshots.length)}
+        className="absolute right-2 p-2 text-2xl text-white/60 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+      >
+        ›
+      </button>
+      <div className="absolute bottom-2 flex gap-1">
+        {screenshots.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setIndex(i)}
+            className={`w-1.5 h-1.5 rounded-full transition-colors ${i === index ? "bg-accent" : "bg-white/30"}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function ScreenshotCarousel({ screenshots }: { screenshots: string[] }) {
   const [index, setIndex] = useState(0);
@@ -133,11 +176,8 @@ export default function Projects() {
         <FadeIn delay={100}>
           <div className="border border-white/10 hover:border-white/20 transition-colors mb-px">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
-              {/* Placeholder image */}
-              <div className="bg-[#0a0a0a] aspect-video flex items-center justify-center">
-                <span className="font-mono text-xs text-white/20 tracking-widest uppercase text-center px-4">
-                  Ibis Golf App — Screenshot TBD
-                </span>
+              <div className="bg-[#0a0a0a] aspect-video overflow-hidden">
+                <IbisCarousel screenshots={ibis.screenshots} />
               </div>
 
               {/* Content */}
