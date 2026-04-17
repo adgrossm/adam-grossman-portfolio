@@ -34,7 +34,7 @@ export default function About() {
 
           <FadeIn delay={200}>
             <p className="text-white/50 text-base sm:text-lg leading-relaxed mb-10 md:mb-14">
-              I build things, I follow through, and I care about outcomes — not
+              I build things, I follow through, and I care about outcomes. Not
               just deliverables.
             </p>
           </FadeIn>
