@@ -955,16 +955,6 @@
 </div>
 
 <div style="margin-bottom:1rem;">
-  <div class="detail-section">
-  <div class="detail-section-label">Status</div>
-  <select id="d-status" class="status-select" onchange="handleStatusChange(this.value)">
-    <option value="new">🟢 New</option>
-    <option value="applied">📤 Applied</option>
-    <option value="interview">🎯 Interview</option>
-    <option value="offer">🏆 Offer</option>
-    <option value="rejected">❌ Rejected</option>
-  </select>
-</div>
   <div class="detail-section-label">Source</div>
   <select id="d-source" class="status-select" onchange="updateField('source', this.value)">
     <option value="linkedin">LinkedIn</option>
@@ -1500,11 +1490,11 @@ function confirmRejection(btn) {
     job.status = 'rejected';
     job.rejectionReason = reason;
     saveJobs();
-    renderJobs();
     updateStats();
   }
-  
+
   document.body.removeChild(modal);
+  closeDetail();
 }
 
 function cancelRejection(btn) {
