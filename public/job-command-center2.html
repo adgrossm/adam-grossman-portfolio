@@ -992,6 +992,14 @@
   </div>
 
   <div class="detail-section">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div class="detail-section-label" style="margin-bottom:0;">Contacts</div>
+      <button onclick="addContact()" style="font-size:0.7rem;font-family:'Syne',sans-serif;font-weight:700;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:3px 10px;cursor:pointer;color:var(--text2);">+ Add</button>
+    </div>
+    <div id="d-contacts"></div>
+  </div>
+
+  <div class="detail-section">
     <div class="detail-section-label">Resume to Use</div>
     <div style="font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--accent);padding:6px 0;" id="d-resume">—</div>
   </div>
@@ -1076,6 +1084,7 @@ window.onload = async function() {
       rejectionReason: j.rejection_reason,
       resumePdfUrl: j.resume_pdf_url || null,
       resumeDocxUrl: j.resume_docx_url || null,
+      contacts: j.contacts || [],
     }));
   }
 
@@ -1357,6 +1366,7 @@ function openDetail(id) {
   document.getElementById('d-notes').value = job.notes || '';
   document.getElementById('d-resume').textContent = job.resumeUsed + ' Resume';
   renderResumeSection(job);
+  renderContacts(job);
   document.getElementById('d-description').textContent = job.listing?.slice(0, 1500) || 'No description available.';
 
   const applyLink = document.getElementById('d-apply');
@@ -1692,9 +1702,78 @@ async function saveJobs() {
       rejection_reason: j.rejectionReason || '',
       resume_pdf_url: j.resumePdfUrl || null,
       resume_docx_url: j.resumeDocxUrl || null,
+      contacts: j.contacts || [],
     }))
   );
   if (error) console.error('Save error:', error);
+}
+
+// ── CONTACTS ──────────────────────────────────────────────
+function renderContacts(job) {
+  const container = document.getElementById('d-contacts');
+  if (!job.contacts || job.contacts.length === 0) {
+    container.innerHTML = '<div style="font-size:0.78rem;color:var(--text3);padding:4px 0;">No contacts added yet.</div>';
+    return;
+  }
+  container.innerHTML = job.contacts.map((c, i) => `
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
+        <div style="font-weight:700;font-size:0.88rem;">${c.name || 'Unnamed Contact'}</div>
+        <button onclick="removeContact(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.8rem;">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Name</div>
+          <input value="${c.name || ''}" onchange="updateContact(${i},'name',this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Syne',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
+        </div>
+        <div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Title</div>
+          <input value="${c.title || ''}" onchange="updateContact(${i},'title',this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Syne',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
+        </div>
+        <div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Email</div>
+          <input value="${c.email || ''}" onchange="updateContact(${i},'email',this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);outline:none;">
+        </div>
+        <div>
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Phone</div>
+          <input value="${c.phone || ''}" onchange="updateContact(${i},'phone',this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);outline:none;">
+        </div>
+        <div style="grid-column:1/-1;">
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">LinkedIn URL</div>
+          <input value="${c.linkedin || ''}" onchange="updateContact(${i},'linkedin',this.value)" placeholder="https://linkedin.com/in/..." style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);outline:none;">
+        </div>
+        <div style="grid-column:1/-1;">
+          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Notes</div>
+          <input value="${c.notes || ''}" onchange="updateContact(${i},'notes',this.value)" placeholder="How you connected, context..." style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Syne',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
+        </div>
+      </div>
+      ${c.linkedin ? `<a href="${c.linkedin}" target="_blank" style="display:inline-block;margin-top:8px;font-size:0.72rem;color:var(--accent);text-decoration:none;font-family:'DM Mono',monospace;">View LinkedIn ↗</a>` : ''}
+    </div>
+  `).join('');
+}
+
+function addContact() {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+  if (!job.contacts) job.contacts = [];
+  job.contacts.push({ name: '', title: '', email: '', phone: '', linkedin: '', notes: '' });
+  saveJobs();
+  renderContacts(job);
+}
+
+function removeContact(index) {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+  job.contacts.splice(index, 1);
+  saveJobs();
+  renderContacts(job);
+}
+
+function updateContact(index, field, value) {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job || !job.contacts[index]) return;
+  job.contacts[index][field] = value;
+  saveJobs();
 }
 
 // ── RESUME UPLOAD ─────────────────────────────────────────
