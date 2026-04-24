@@ -1026,6 +1026,19 @@
   </div>
 
 <script>
+// ── PASSWORD PROTECTION ───────────────────────────────────
+(function() {
+  const PASS = 'jcc2025';
+  const stored = sessionStorage.getItem('jcc-auth');
+  if (stored === PASS) return;
+  const entered = prompt('Enter password to access Job Command Center:');
+  if (entered !== PASS) {
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#888;">Access denied.</div>';
+    throw new Error('Unauthorized');
+  }
+  sessionStorage.setItem('jcc-auth', PASS);
+})();
+
 // ── STATE ──────────────────────────────────────────────────
 const SUPABASE_URL = 'https://koaainzpslvxnriuiuoa.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_biLMaC_FHIyiMl4aaVDZbQ_CvQ6pk3J';
