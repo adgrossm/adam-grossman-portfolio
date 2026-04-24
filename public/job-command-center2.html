@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Command Center — Adam Grossman</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+   --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface2: #f0f1f4;
+  --border: #e2e4ea;
+  --border2: #d0d3dc;
+  --accent: #2563eb;
+  --accent2: #0ea5e9;
+  --gold: #d97706;
+  --red: #dc2626;
+  --orange: #ea580c;
+  --text: #1a1d26;
+  --text2: #5a5f72;
+  --text3: #9a9fb0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .logo span {
+    color: var(--text2);
+    font-weight: 400;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: var(--text2);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .stat-pill strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .stat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /* ── LAYOUT ── */
+  .app {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 60px);
+  }
+
+  /* ── LEFT PANEL ── */
+  .left-panel {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-section {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .panel-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 0.75rem;
+  }
+
+  /* Score input area */
+  textarea {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    padding: 0.75rem;
+    resize: none;
+    height: 140px;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+
+  textarea:focus {
+    border-color: var(--accent);
+  }
+
+  textarea::placeholder {
+    color: var(--text3);
+  }
+
+  .resume-select {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0.75rem 0;
+    flex-wrap: wrap;
+  }
+
+  .resume-btn {
+    flex: 1;
+    min-width: 60px;
+    padding: 6px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text2);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .resume-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .resume-btn:hover:not(.active) {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .score-btn {
+    width: 100%;
+    padding: 10px;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: var(--bg);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    letter-spacing: 0.3px;
+  }
+
+  .score-btn:hover { opacity: 0.88; }
+  .score-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .score-btn.secondary {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    margin-top: 0.5rem;
+  }
+
+  .score-btn.secondary:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+  }
+
+  .score-btn.import-btn {
+    background: var(--surface2);
+    border: 1px solid var(--accent2);
+    color: var(--accent2);
+    margin-top: 0.5rem;
+  }
+
+  .score-btn.import-btn:hover { opacity: 0.8; }
+
+  /* Score result */
+  #score-result {
+    display: none;
+    margin-top: 0.75rem;
+  }
+
+  .score-display {
+    text-align: center;
+    padding: 1rem;
+    background: var(--surface2);
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+  }
+
+  .score-number {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .score-label {
+    font-size: 0.72rem;
+    color: var(--text2);
+    margin-top: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .score-resume-rec {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .score-feedback {
+    font-size: 0.78rem;
+    color: var(--text2);
+    margin-top: 0.75rem;
+    line-height: 1.6;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    text-align: left;
+  }
+
+  .keywords-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 0.75rem;
+  }
+
+  .kw {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+  }
+
+  .kw.match { background: rgba(79,255,176,0.12); color: var(--accent); }
+  .kw.miss { background: rgba(255,92,92,0.12); color: var(--red); }
+
+  .add-pipeline-btn {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.5px;
+  }
+
+  .add-pipeline-btn:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* Pipeline stats */
+  .pipeline-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .pipeline-stat {
+    background: var(--surface2);
+    border-radius: 6px;
+    padding: 0.75rem;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+
+  .pipeline-stat-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: 'DM Mono', monospace;
+    line-height: 1;
+  }
+
+  .pipeline-stat-label {
+    font-size: 0.65rem;
+    color: var(--text3);
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* Filters */
+  .filter-row {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    padding: 5px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    color: var(--text2);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .filter-btn:hover:not(.active) {
+    border-color: var(--text2);
+    color: var(--text);
+  }
+
+  /* Import status */
+  #import-status {
+    font-size: 0.72rem;
+    color: var(--accent2);
+    margin-top: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    min-height: 16px;
+  }
+
+  /* ── RIGHT PANEL ── */
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .right-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface);
+  }
+
+  .right-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+
+  .job-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text2);
+  }
+
+  /* Job list */
+  .job-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .kanban-column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .kanban-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 0.5rem 0;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .kanban-count {
+    background: var(--surface2);
+    border-radius: 20px;
+    padding: 2px 8px;
+    font-size: 0.7rem;
+    color: var(--text2);
+  }
+
+  @media (max-width: 768px) {
+    .job-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .job-list::-webkit-scrollbar { width: 4px; }
+  .job-list::-webkit-scrollbar-track { background: transparent; }
+  .job-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .job-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .job-card:hover {
+    border-color: var(--border2);
+    background: var(--surface2);
+  }
+
+  .job-card.selected {
+    border-color: var(--accent);
+    background: var(--surface2);
+  }
+
+  .job-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .job-title-co {
+    flex: 1;
+  }
+
+  .job-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .job-company {
+    font-size: 0.78rem;
+    color: var(--text2);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .job-score-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .job-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .job-tag {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .tag-new { background: rgba(79,255,176,0.1); color: var(--accent); }
+  .tag-applied { background: rgba(0,200,255,0.1); color: var(--accent2); }
+  .tag-interview { background: rgba(255,200,71,0.1); color: var(--gold); }
+  .tag-offer { background: rgba(79,255,176,0.2); color: var(--accent); }
+  .tag-rejected { background: rgba(255,92,92,0.1); color: var(--red); }
+  .tag-auto { background: rgba(255,140,66,0.1); color: var(--orange); }
+
+  .job-date {
+    font-size: 0.68rem;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    margin-left: auto;
+  }
+
+  /* Job detail panel */
+  .job-detail {
+    display: none;
+    position: fixed;
+    top: 60px;
+    right: 0;
+    width: 1080px;
+    height: calc(100vh - 60px);
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 50;
+    padding: 1.5rem;
+    animation: slideIn 0.2s ease;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  .job-detail.open { display: block; }
+
+  .detail-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text2);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.15s;
+  }
+
+  .detail-close:hover { color: var(--text); border-color: var(--text2); }
+
+  .detail-score-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .detail-score-big {
+    font-size: 3.5rem;
+    font-weight: 800;
+    font-family: 'DM Mono', monospace;
+    line-height: 1;
+  }
+
+  .detail-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.25rem;
+  }
+
+  .detail-company {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--text2);
+  }
+
+  .detail-section {
+    margin-bottom: 1.25rem;
+  }
+
+  .detail-section-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 0.5rem;
+  }
+
+  .status-select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    padding: 8px 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .status-select:focus { border-color: var(--accent); }
+
+  .notes-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    padding: 8px 12px;
+    height: 80px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+    line-height: 1.5;
+  }
+
+  .notes-input:focus { border-color: var(--accent); }
+
+  .detail-feedback {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--text2);
+    line-height: 1.7;
+    padding: 0.75rem;
+    background: var(--surface2);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .detail-description {
+    font-size: 0.78rem;
+    color: var(--text2);
+    line-height: 1.7;
+    font-family: 'DM Mono', monospace;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.75rem;
+    background: var(--surface2);
+    border-radius: 6px;
+    white-space: pre-wrap;
+  }
+
+  .apply-link {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background: var(--accent);
+    color: var(--bg);
+    text-align: center;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.15s;
+    margin-top: 0.75rem;
+  }
+
+  .apply-link:hover { opacity: 0.88; }
+
+  .delete-btn {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid rgba(255,92,92,0.3);
+    border-radius: 6px;
+    color: var(--red);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.15s;
+  }
+
+  .delete-btn:hover { background: rgba(255,92,92,0.08); border-color: var(--red); }
+
+  /* Empty state */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text3);
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.4;
+  }
+
+  .empty-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  /* Loading */
+  .loading-bar {
+    display: none;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    animation: loadSlide 1.2s ease infinite;
+    border-radius: 2px;
+    margin-top: 0.5rem;
+  }
+
+  @keyframes loadSlide {
+    0% { width: 0%; margin-left: 0; }
+    50% { width: 70%; margin-left: 15%; }
+    100% { width: 0%; margin-left: 100%; }
+  }
+
+  .loading-bar.active { display: block; }
+
+  /* Score color helpers */
+  .score-high { color: var(--accent); }
+  .score-mid { color: var(--gold); }
+  .score-low { color: var(--orange); }
+  .score-skip { color: var(--red); }
+
+  .bg-high { background: rgba(79,255,176,0.1); border-color: rgba(79,255,176,0.3); }
+  .bg-mid { background: rgba(255,200,71,0.1); border-color: rgba(255,200,71,0.3); }
+  .bg-low { background: rgba(255,140,66,0.1); border-color: rgba(255,140,66,0.3); }
+
+  @media (max-width: 768px) {
+    .app {
+      grid-template-columns: 1fr;
+      height: auto;
+      overflow: visible;
+    }
+
+    .left-panel {
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      overflow: visible;
+    }
+
+    .right-panel {
+      height: auto;
+      overflow: visible;
+    }
+
+    .job-list {
+      overflow: visible;
+      max-height: none;
+      grid-template-columns: 1fr;
+    }
+
+    .job-detail {
+      width: 100%;
+      left: 0;
+      right: 0;
+    }
+
+    .header-stats {
+      display: none;
+    }
+
+    body {
+      overflow: auto;
+    }
+  }
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <div class="logo">JCC <span>/ Job Command Center</span></div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-pill"><div class="stat-dot"></div> <strong id="stat-total">0</strong> total</div>
+    <div class="stat-pill">🟢 <strong id="stat-new">0</strong> new</div>
+    <div class="stat-pill">📤 <strong id="stat-applied">0</strong> applied</div>
+    <div class="stat-pill">🎯 <strong id="stat-interview">0</strong> interviews</div>
+  </div>
+</header>
+
+<div class="app">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+
+    <!-- Score a listing -->
+    <div class="panel-section">
+      <div class="panel-label">Score a Listing</div>
+      <textarea id="job-input" placeholder="Paste job description here..."></textarea>
+      <input type="url" id="job-url-input" placeholder="Paste job URL here (optional)..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;margin:0.5rem 0;">
+      <select id="job-source-input" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Syne',sans-serif;font-size:0.78rem;padding:8px 10px;outline:none;margin-bottom:0.5rem;">
+      <option value="linkedin">LinkedIn</option>
+      <option value="indeed">Indeed</option>
+      <option value="company">Company Website</option>
+      <option value="referral">Referral</option>
+      <option value="other">Other</option>
+      </select>
+      <div class="resume-select">
+        <button class="resume-btn active" onclick="selectResume('AUTO')">AUTO</button>
+        <button class="resume-btn" onclick="selectResume('CSM')">CSM</button>
+        <button class="resume-btn" onclick="selectResume('PM')">PM</button>
+        <button class="resume-btn" onclick="selectResume('IMPL')">IMPL</button>
+      </div>
+      <button class="score-btn" id="score-btn" onclick="scoreJob()">Score This Listing →</button>
+      <div class="loading-bar" id="loading-bar"></div>
+
+      <div id="score-result">
+        <div class="score-display">
+          <div class="score-number" id="score-num">—</div>
+          <div class="score-label">Match Score</div>
+          <div class="score-resume-rec" id="score-resume-rec"></div>
+          <div class="score-feedback" id="score-feedback"></div>
+          <div class="keywords-row" id="score-keywords"></div>
+        </div>
+        <button class="add-pipeline-btn" onclick="addToPipeline()">+ Add to Pipeline</button>
+      </div>
+    </div>
+
+    <!-- Auto Import -->
+    <div class="panel-section">
+  <div class="panel-label">Auto Import</div>
+  <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJobs(event)">
+  <button class="score-btn import-btn" onclick="document.getElementById('import-file').click()">
+    ⬆ Import Fetched Jobs
+  </button>
+
+  <div id="import-status"></div>
+  </div>
+
+    <!-- Pipeline Stats -->
+    <div class="panel-section">
+      <div class="panel-label">Pipeline</div>
+      <div class="pipeline-grid">
+        <div class="pipeline-stat">
+          <div class="pipeline-stat-num score-high" id="ps-new">0</div>
+          <div class="pipeline-stat-label">New</div>
+        </div>
+        <div class="pipeline-stat">
+          <div class="pipeline-stat-num score-mid" id="ps-applied">0</div>
+          <div class="pipeline-stat-label">Applied</div>
+        </div>
+        <div class="pipeline-stat">
+          <div class="pipeline-stat-num" style="color:var(--accent2)" id="ps-interview">0</div>
+          <div class="pipeline-stat-label">Interview</div>
+        </div>
+        <div class="pipeline-stat">
+          <div class="pipeline-stat-num score-low" id="ps-rejected">0</div>
+          <div class="pipeline-stat-label">Rejected</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Key -->
+    <div class="panel-section">
+      <div class="panel-label">Anthropic API Key</div>
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;">
+      <button class="score-btn secondary" onclick="saveKey()" style="margin-top:0.5rem;">Save Key</button>
+      <div id="key-status" style="font-size:0.7rem;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace;"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="right-header">
+      <div class="right-title">Pipeline</div>
+      <div class="job-count" id="job-count">0 roles</div>
+    </div>
+    <div class="job-list" id="job-list">
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <div class="empty-text">No jobs in pipeline yet. Paste a listing to score it, or import from your fetch script.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- JOB DETAIL PANEL -->
+<div class="job-detail" id="job-detail">
+  <button class="detail-close" onclick="closeDetail()">✕</button>
+
+  <div class="detail-score-row">
+  <div class="detail-score-big" id="d-score">—</div>
+  <div style="flex:1;">
+    <input type="text" id="d-title" style="font-size:1.15rem;font-weight:700;color:var(--text);background:transparent;border:none;border-bottom:1px solid var(--border2);width:100%;outline:none;padding:2px 0;margin-bottom:4px;" onchange="updateField('title', this.value)">
+    <input type="text" id="d-company" style="font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--text2);background:transparent;border:none;border-bottom:1px solid var(--border2);width:100%;outline:none;padding:2px 0;" onchange="updateField('company', this.value)">
+  </div>
+</div>
+
+<div style="margin-bottom:0.75rem;">
+  <div class="detail-section-label">LinkedIn URL</div>
+  <input type="text" id="d-linkedin-url" placeholder="Paste LinkedIn job URL here..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;" onchange="updateField('linkedinUrl', this.value)">
+</div>
+
+<div style="margin-bottom:1rem;">
+  <div class="detail-section-label">Company Apply URL</div>
+  <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+    <input type="text" id="d-apply-input" placeholder="Paste direct company apply URL..." style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;" onchange="updateApplyUrl(this.value)">
+    <a class="apply-link" id="d-apply" href="#" target="_blank" style="white-space:nowrap;padding:8px 12px;margin:0;font-size:0.78rem;display:none;">Apply →</a>
+  </div>
+</div>
+
+<div style="margin-bottom:1rem;">
+  <div class="detail-section">
+  <div class="detail-section-label">Status</div>
+  <select id="d-status" class="status-select" onchange="handleStatusChange(this.value)">
+    <option value="new">🟢 New</option>
+    <option value="applied">📤 Applied</option>
+    <option value="interview">🎯 Interview</option>
+    <option value="offer">🏆 Offer</option>
+    <option value="rejected">❌ Rejected</option>
+  </select>
+</div>
+  <div class="detail-section-label">Source</div>
+  <select id="d-source" class="status-select" onchange="updateField('source', this.value)">
+    <option value="linkedin">LinkedIn</option>
+    <option value="indeed">Indeed</option>
+    <option value="company">Company Website</option>
+    <option value="adzuna">Adzuna</option>
+    <option value="referral">Referral</option>
+    <option value="other">Other</option>
+  </select>
+</div>
+
+  <div class="detail-section">
+    <div class="detail-section-label">AI Feedback</div>
+    <div class="detail-feedback" id="d-feedback">—</div>
+  </div>
+
+  <div class="detail-section">
+    <div class="keywords-row" id="d-keywords"></div>
+  </div>
+
+  <div class="detail-section">
+    <div class="detail-section-label">Status</div>
+    <select class="status-select" id="d-status" onchange="handleStatusChange(this.value)">
+      <option value="new">🟢 New</option>
+      <option value="applied">📤 Applied</option>
+      <option value="interview">🎯 Interview</option>
+      <option value="offer">🏆 Offer</option>
+      <option value="rejected">❌ Rejected</option>
+    </select>
+  </div>
+
+  <div class="detail-section">
+    <div class="detail-section-label">Notes</div>
+    <textarea class="notes-input" id="d-notes" placeholder="Contacts, follow-ups, observations..." oninput="updateNotes()"></textarea>
+  </div>
+
+  <div class="detail-section">
+    <div class="detail-section-label">Resume to Use</div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--accent);padding:6px 0;" id="d-resume">—</div>
+  </div>
+
+  <div class="detail-section">
+    <div class="detail-section-label">Resume Files</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
+      <div>
+        <div id="resume-pdf-btn"></div>
+        <div id="resume-pdf-status" style="font-size:0.7rem;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace;"></div>
+      </div>
+      <div>
+        <div id="resume-docx-btn"></div>
+        <div id="resume-docx-status" style="font-size:0.7rem;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <div class="detail-section-label">Job Description</div>
+    <div class="detail-description" id="d-description">—</div>
+  </div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────
+const SUPABASE_URL = 'https://koaainzpslvxnriuiuoa.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_biLMaC_FHIyiMl4aaVDZbQ_CvQ6pk3J';
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let jobs = [];
+let selectedResume = 'AUTO';
+let currentFilter = 'all';
+let selectedJobId = null;
+let currentScoreData = null;
+let currentListing = '';
+
+// Resumes
+const RESUMES = {
+  csm: `Senior Customer Success Manager with 15+ years of experience. Skills: Customer Lifecycle & Renewal Strategy, Executive Stakeholder Engagement, Net Revenue Retention & Expansion Growth, Customer Health Monitoring, SaaS & ERP Customer Success, Risk & Escalation Management, Cross-Functional Collaboration, Executive QBRs, Data-Driven Performance Reviews, Change Management, Customer Value Realization, Voice of Customer Programs, Client Training & Enablement, Customer Success Playbooks, AI-Assisted Documentation. Tools: Jira, Confluence, Salesforce, HubSpot, Monday.com, Zoho. Experience: Grew portfolio ARR from $1.7M to $2.4M achieving 108% NRR. 95% logo retention across 58 clients. $700K expansion ARR. Built first CS framework with playbooks, health scoring, renewal forecasting. NPS of 85.`,
+  pm: `Program and Project Manager with 15+ years of experience delivering complex software implementations and cross-functional programs across SaaS, ERP, and enterprise technology environments. Skills: Project & Program Management, Software Implementation Lifecycle (SDLC), Requirements Gathering & User Story Development, Work Breakdown Structures & Project Scheduling, Agile Sprint Planning & Backlog Management, Risk Identification & Mitigation, Escalation Management, Change Management & Scope Control, Cross-Functional Team Leadership, UAT Coordination & QA Oversight, Stakeholder Communication & Status Reporting, Executive Presentations & Demos, AI-Assisted Documentation & Workflow Optimization. Tools: Jira, Confluence, SharePoint, MS Project, Salesforce, HubSpot, Monday.com, Zoho, Microsoft Office, Google Workspace. Certifications: PSM I, PMP In Progress, Atlassian Agile Project Management Certificate, Full Stack Web Development Certificate UNC Charlotte. Experience: Delivered $8M+ total program value. 95%+ logo retention across 50+ accounts. Grew Google account from $120K to $2M (16x). Led NIST-aligned mobile platform from 0 to 10 enterprise clients across 6 states with 3,000 active licenses. Built first implementation SOPs and Jira sprint frameworks reducing timelines 30% and post-go-live issues 20%. NPS of 85. Led 75+ global resources across 30-50 concurrent accounts. 99% on-time delivery. ISO 9001 and ISO 27001 certified framework experience.`,
+  impl: `Implementation Project Manager with 4.5 years ERP/SaaS implementation experience and 15+ years project management. Skills: ERP Implementation Lifecycle, Client Onboarding & Go-Live Execution, SOP & Delivery Framework Development, Agile Sprint Planning, SDLC, Cross-Functional Team Leadership, Jira-Based Project Management, Requirements Gathering, Risk Identification, Executive Stakeholder Communication, UAT Coordination & QA Oversight, Change Management & User Adoption, Post-Launch Stabilization. Experience: 16 Odoo ERP implementations averaging $75K each. Rebuilt 15+ at-risk implementations. Built company's first implementation SOPs. Reduced timelines 40%, cut post-go-live issues 20%.`
+};
+
+// ── INIT ──────────────────────────────────────────────────
+window.onload = async function() {
+  const savedKey = localStorage.getItem('jcc-api-key');
+  if (savedKey) {
+    document.getElementById('api-key-input').value = savedKey;
+    document.getElementById('key-status').textContent = 'Key loaded from storage';
+  }
+
+  const { data, error } = await db.from('jobs').select('*').eq('archived', false).order('added_at', { ascending: false });
+  if (data) {
+    jobs = data.map(j => ({
+      id: j.id,
+      title: j.title,
+      company: j.company,
+      location: j.location,
+      listing: j.listing,
+      applyUrl: j.apply_url,
+      linkedinUrl: j.linkedin_url,
+      score: j.score,
+      resumeUsed: j.resume_used,
+      feedback: j.feedback,
+      keywords: j.keywords,
+      status: j.status,
+      addedAt: j.added_at,
+      notes: j.notes,
+      source: j.source,
+      rejectionReason: j.rejection_reason,
+      resumePdfUrl: j.resume_pdf_url || null,
+      resumeDocxUrl: j.resume_docx_url || null,
+    }));
+  }
+
+  renderJobs();
+  updateStats();
+};
+
+// ── API KEY ───────────────────────────────────────────────
+function saveKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key.startsWith('sk-ant-')) {
+    document.getElementById('key-status').textContent = 'Key should start with sk-ant-';
+    return;
+  }
+  localStorage.setItem('jcc-api-key', key);
+  document.getElementById('key-status').textContent = 'Key saved successfully';
+}
+
+function getKey() {
+  return localStorage.getItem('jcc-api-key') || document.getElementById('api-key-input').value.trim();
+}
+
+// ── RESUME SELECT ─────────────────────────────────────────
+function selectResume(r) {
+  selectedResume = r;
+  document.querySelectorAll('.resume-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// ── SCORE ─────────────────────────────────────────────────
+async function scoreJob() {
+  const listing = document.getElementById('job-input').value.trim();
+  if (!listing) return;
+
+  const key = getKey();
+  if (!key) {
+    alert('Please enter your Anthropic API key first.');
+    return;
+  }
+
+  currentListing = listing;
+  const btn = document.getElementById('score-btn');
+  btn.disabled = true;
+  btn.textContent = 'Scoring...';
+  document.getElementById('loading-bar').classList.add('active');
+  document.getElementById('score-result').style.display = 'none';
+
+  const resumeContext = selectedResume === 'AUTO'
+    ? `CSM RESUME: ${RESUMES.csm}\n\nPM RESUME: ${RESUMES.pm}\n\nIMPLEMENTATION RESUME: ${RESUMES.impl}\n\nPick the best matching resume.`
+    : selectedResume === 'CSM' ? `Resume: ${RESUMES.csm}`
+    : selectedResume === 'PM' ? `Resume: ${RESUMES.pm}`
+    : `Resume: ${RESUMES.impl}`;
+
+const prompt = `You are a senior recruiter evaluating job fit for Adam Grossman. Be brutally honest. Most jobs should score between 55-75%. Only exceptional matches score above 80%.
+
+JOB LISTING:
+${listing.slice(0, 4000)}
+
+${resumeContext}
+
+ADAM'S PROFILE:
+- 15+ years experience in Customer Success, ERP/SaaS Implementation, and Project Management
+- Target salary: $110K-$130K minimum. Flag any role that likely cannot meet this.
+- Location: Fort Mill, SC. Needs fully remote or Charlotte metro hybrid only.
+- Strong in: SaaS, ERP (Odoo, Acumatica), Salesforce, Jira, HubSpot, Monday.com, Confluence
+- No experience in: insurance, healthcare clinical, legal, finance/banking, government, pharma
+- Currently unemployed, actively searching
+
+SCORING RULES - apply all of these:
+1. HARD DISQUALIFIERS cap score at 55: required industry experience Adam lacks (insurance, pharma, legal, healthcare clinical), required security clearance, required on-site in non-Charlotte location.
+2. OVERQUALIFICATION penalty: if role requires 3-7 years and Adam has 15+, deduct 10-15 points. Overqualification leads to rejection.
+3. COMPENSATION risk: if company is Seed/Series A under $15M funding, or nonprofit, or government, flag as likely below target comp and deduct 5-10 points.
+4. REMOTE confirmation: if job says hybrid but does not specify Charlotte area, deduct 10 points. If location is ambiguous, deduct 5 points.
+5. KEYWORD INFLATION warning: do not inflate scores because keywords match. A job can have 80% keyword match but still be a 60% fit due to industry, comp, or experience mismatch.
+6. SCORING BENCHMARKS: 85-100 = rare, Adam should drop everything and apply today. 75-84 = strong match, worth tailoring resume and applying. 65-74 = reasonable fit with notable gaps, apply if pipeline is thin. Below 65 = significant issues, skip unless desperate.
+
+Respond ONLY with valid JSON, no other text:
+{
+  "score": 72,
+  "bestResume": "CSM",
+  "feedback": "4-5 sentence honest assessment covering: overall fit, any hard disqualifiers, overqualification risk, comp concerns, and remote/location confirmation.",
+  "hardDisqualifiers": ["specific disqualifier"] or [],
+  "strengths": ["specific skill Adam has that matches this role"],
+  "addToResume": ["skill Adam likely has but should add explicitly for this role"],
+  "trueGaps": ["skill this role requires that Adam genuinely lacks"]
+}`;
+
+  try {
+    const res = await fetch('/api/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt: prompt, apiKey: key })
+    });
+
+    const data = await res.json();
+    const text = data.content?.[0]?.text || '{}';
+    const clean = text.replace(/```json\n?|```\n?/g, '').trim();
+    const parsed = JSON.parse(clean);
+    currentScoreData = parsed;
+
+    const score = parsed.score || 0;
+    const scoreEl = document.getElementById('score-num');
+    scoreEl.textContent = score + '%';
+    scoreEl.className = 'score-number ' + scoreClass(score);
+
+    const rec = document.getElementById('score-resume-rec');
+    rec.textContent = parsed.bestResume || selectedResume;
+    rec.className = 'score-resume-rec ' + (score >= 75 ? 'tag-applied' : 'tag-new');
+
+    document.getElementById('score-feedback').textContent = parsed.feedback || '';
+
+    const kwRow = document.getElementById('score-keywords');
+    kwRow.innerHTML = '';
+
+    if (parsed.hardDisqualifiers && parsed.hardDisqualifiers.length > 0) {
+      const label = document.createElement('div');
+      label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#dc2626;margin-top:8px;margin-bottom:4px;';
+      label.textContent = 'Hard Disqualifiers';
+      kwRow.appendChild(label);
+      parsed.hardDisqualifiers.forEach(k => {
+        const el = document.createElement('span');
+        el.className = 'kw miss';
+        el.style = 'background:rgba(220,38,38,0.15);color:#dc2626;font-weight:700;';
+        el.textContent = '⚠ ' + k;
+        kwRow.appendChild(el);
+      });
+    }
+
+    if (parsed.strengths && parsed.strengths.length > 0) {
+      const label = document.createElement('div');
+      label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2563eb;margin-top:8px;margin-bottom:4px;';
+      label.textContent = 'Your Strengths — Lead With These';
+      kwRow.appendChild(label);
+      parsed.strengths.forEach(k => {
+        const el = document.createElement('span');
+        el.className = 'kw match';
+        el.textContent = k;
+        kwRow.appendChild(el);
+      });
+    }
+
+    if (parsed.addToResume && parsed.addToResume.length > 0) {
+      const label = document.createElement('div');
+      label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#d97706;margin-top:8px;margin-bottom:4px;';
+      label.textContent = 'Add to Your Resume Before Applying';
+      kwRow.appendChild(label);
+      parsed.addToResume.forEach(k => {
+        const el = document.createElement('span');
+        el.className = 'kw';
+        el.style = 'background:rgba(217,119,6,0.1);color:#d97706;';
+        el.textContent = k;
+        kwRow.appendChild(el);
+      });
+    }
+
+    if (parsed.trueGaps && parsed.trueGaps.length > 0) {
+      const label = document.createElement('div');
+      label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#dc2626;margin-top:8px;margin-bottom:4px;';
+      label.textContent = 'Genuine Skill Gaps';
+      kwRow.appendChild(label);
+      parsed.trueGaps.forEach(k => {
+        const el = document.createElement('span');
+        el.className = 'kw miss';
+        el.textContent = k;
+        kwRow.appendChild(el);
+      });
+    }
+
+    document.getElementById('score-result').style.display = 'block';
+
+  } catch(err) {
+    alert('Scoring failed. Check your API key and try again.');
+    console.error(err);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Score This Listing →';
+  document.getElementById('loading-bar').classList.remove('active');
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function renderJobs() {
+  const list = document.getElementById('job-list');
+
+  const newJobs = jobs.filter(j => j.status === 'new');
+  const appliedJobs = jobs.filter(j => j.status === 'applied');
+  const interviewJobs = jobs.filter(j => j.status === 'interview' || j.status === 'offer');
+
+  document.getElementById('job-count').textContent = jobs.length + ' role' + (jobs.length !== 1 ? 's' : '');
+
+  function renderCard(job) {
+    return `<div class="job-card ${selectedJobId === job.id ? 'selected' : ''}" onclick="openDetail('${job.id}')">
+      <div class="job-card-top">
+        <div class="job-title-co">
+          <div class="job-title">${job.title}</div>
+          <div class="job-company">${job.company}</div>
+        </div>
+        <div class="job-score-badge ${scoreBgClass(job.score)} ${scoreClass(job.score)}">${job.score}%</div>
+      </div>
+      <div class="job-meta">
+        <span class="job-tag" style="background:rgba(255,255,255,0.05);color:var(--text3);">${job.resumeUsed || ''}</span>
+        ${job.source === 'indeed' ? '<span class="job-tag tag-auto" style="background:rgba(0,100,255,0.1);color:#2563eb;">INDEED</span>' : ''}
+        ${job.source === 'adzuna' ? '<span class="job-tag tag-auto" style="background:rgba(255,140,0,0.1);color:#d97706;">ADZUNA</span>' : ''}
+        ${job.source === 'linkedin' ? '<span class="job-tag tag-auto" style="background:rgba(0,119,181,0.1);color:#0077b5;">LINKEDIN</span>' : ''}
+        ${job.source === 'company' ? '<span class="job-tag tag-auto" style="background:rgba(45,90,39,0.1);color:#2d5a27;">DIRECT</span>' : ''}
+        <span class="job-date">${formatDate(job.addedAt)}</span>
+      </div>
+    </div>`;
+  }
+
+  list.innerHTML = `
+    <div class="kanban-column">
+      <div class="kanban-header">
+        <span>🟢 New</span>
+        <span class="kanban-count">${newJobs.length}</span>
+      </div>
+      ${newJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;">No new roles</div>' : newJobs.map(renderCard).join('')}
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-header">
+        <span>📤 Applied</span>
+        <span class="kanban-count">${appliedJobs.length}</span>
+      </div>
+      ${appliedJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;">Nothing applied yet</div>' : appliedJobs.map(renderCard).join('')}
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-header">
+        <span>🎯 Interviews</span>
+        <span class="kanban-count">${interviewJobs.length}</span>
+      </div>
+      ${interviewJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;">No interviews yet</div>' : interviewJobs.map(renderCard).join('')}
+    </div>
+  `;
+
+  const rejectedJobs = jobs.filter(j => j.status === 'rejected');
+  if (rejectedJobs.length > 0) {
+    const rejectedSection = document.createElement('div');
+    rejectedSection.style = 'grid-column:1/-1;margin-top:1rem;';
+    rejectedSection.innerHTML = `
+      <details>
+        <summary style="font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);cursor:pointer;padding:0.5rem 0;border-top:1px solid var(--border);">
+          ❌ Rejected (${rejectedJobs.length}) — click to expand
+        </summary>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
+          ${rejectedJobs.map(renderCard).join('')}
+        </div>
+      </details>
+    `;
+    list.appendChild(rejectedSection);
+  }
+}
+
+function statusLabel(s) {
+  const map = { new: '🟢 New', applied: '📤 Applied', interview: '🎯 Interview', offer: '🏆 Offer', rejected: '❌ Rejected' };
+  return map[s] || s;
+}
+
+function formatDate(iso) {
+  if (!iso) return '';
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+// ── DETAIL PANEL ──────────────────────────────────────────
+function openDetail(id) {
+  const job = jobs.find(j => String(j.id) === String(id));
+  if (!job) return;
+
+  selectedJobId = job.id;
+
+  document.getElementById('d-linkedin-url').value = job.linkedinUrl || '';
+  document.getElementById('d-score').textContent = job.score + '%';
+  document.getElementById('d-score').className = 'detail-score-big ' + scoreClass(job.score);
+  document.getElementById('d-title').value = job.title;
+  document.getElementById('d-company').value = job.company;
+  document.getElementById('d-feedback').textContent = job.feedback || 'No feedback available.';
+  document.getElementById('d-status').value = job.status;
+  document.getElementById('d-notes').value = job.notes || '';
+  document.getElementById('d-resume').textContent = job.resumeUsed + ' Resume';
+  renderResumeSection(job);
+  document.getElementById('d-description').textContent = job.listing?.slice(0, 1500) || 'No description available.';
+
+  const applyLink = document.getElementById('d-apply');
+  if (job.applyUrl) {
+    applyLink.href = job.applyUrl;
+    applyLink.style.display = 'block';
+  } else {
+    applyLink.style.display = 'none';
+  }
+
+  document.getElementById('d-apply-input').value = job.applyUrl || '';
+  document.getElementById('d-source').value = job.source || 'linkedin';
+
+  const kwRow = document.getElementById('d-keywords');
+kwRow.innerHTML = '';
+
+if (job.keywords?.hardDisqualifiers?.length > 0) {
+  const label = document.createElement('div');
+  label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#dc2626;margin-top:8px;margin-bottom:4px;';
+  label.textContent = 'Hard Disqualifiers';
+  kwRow.appendChild(label);
+  job.keywords.hardDisqualifiers.forEach(k => {
+    const el = document.createElement('span');
+    el.className = 'kw miss';
+    el.style = 'background:rgba(220,38,38,0.15);color:#dc2626;font-weight:700;';
+    el.textContent = '⚠ ' + k;
+    kwRow.appendChild(el);
+  });
+}
+
+if (job.keywords?.matches?.length > 0) {
+  const label = document.createElement('div');
+  label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2563eb;margin-top:8px;margin-bottom:4px;';
+  label.textContent = 'Your Strengths — Lead With These';
+  kwRow.appendChild(label);
+  job.keywords.matches.forEach(k => {
+    const el = document.createElement('span');
+    el.className = 'kw match';
+    el.textContent = k;
+    kwRow.appendChild(el);
+  });
+}
+
+if (job.keywords?.addToResume?.length > 0) {
+  const label = document.createElement('div');
+  label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#d97706;margin-top:8px;margin-bottom:4px;';
+  label.textContent = 'Add to Your Resume Before Applying';
+  kwRow.appendChild(label);
+  job.keywords.addToResume.forEach(k => {
+    const el = document.createElement('span');
+    el.className = 'kw';
+    el.style = 'background:rgba(217,119,6,0.1);color:#d97706;';
+    el.textContent = k;
+    kwRow.appendChild(el);
+  });
+}
+
+if (job.keywords?.missing?.length > 0) {
+  const label = document.createElement('div');
+  label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#dc2626;margin-top:8px;margin-bottom:4px;';
+  label.textContent = 'Genuine Skill Gaps';
+  kwRow.appendChild(label);
+  job.keywords.missing.forEach(k => {
+    const el = document.createElement('span');
+    el.className = 'kw miss';
+    el.textContent = k;
+    kwRow.appendChild(el);
+  });
+}
+
+  document.getElementById('job-detail').classList.add('open');
+  renderJobs();
+}
+
+function closeDetail() {
+  document.getElementById('job-detail').classList.remove('open');
+  selectedJobId = null;
+  renderJobs();
+}
+
+function handleStatusChange(value) {
+  if (value === 'rejected') {
+    const reasons = [
+      'Wrong industry',
+      'Overqualified',
+      'Comp too low',
+      'Location not right',
+      'Not interested in company',
+      'Applied and rejected by them',
+      'Other'
+    ];
+
+    const reasonHTML = reasons.map((r, i) => 
+      `<label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:0.85rem;">
+        <input type="checkbox" value="${r}" style="cursor:pointer;"> ${r}
+      </label>`
+    ).join('');
+
+    const modal = document.createElement('div');
+    modal.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:var(--surface);border-radius:12px;padding:1.5rem;width:320px;border:1px solid var(--border);">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;">Why are you rejecting this?</div>
+        ${reasonHTML}
+        <div style="display:flex;gap:8px;margin-top:1rem;">
+          <button onclick="confirmRejection(this)" style="flex:1;padding:8px;background:var(--red);border:none;border-radius:6px;color:#fff;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;">Confirm</button>
+          <button onclick="cancelRejection(this)" style="flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;">Cancel</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    return;
+  }
+
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+  job.status = value;
+  saveJobs();
+  renderJobs();
+  updateStats();
+}
+
+function confirmRejection(btn) {
+  const modal = btn.closest('div[style*="position:fixed"]');
+  const checked = [...modal.querySelectorAll('input[type=checkbox]:checked')].map(c => c.value);
+  const reason = checked.length > 0 ? checked.join(', ') : 'No reason given';
+  
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (job) {
+    job.status = 'rejected';
+    job.rejectionReason = reason;
+    saveJobs();
+    renderJobs();
+    updateStats();
+  }
+  
+  document.body.removeChild(modal);
+}
+
+function cancelRejection(btn) {
+  const modal = btn.closest('div[style*="position:fixed"]');
+  document.getElementById('d-status').value = jobs.find(j => String(j.id) === String(selectedJobId))?.status || 'new';
+  document.body.removeChild(modal);
+}
+
+function updateNotes() {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+  job.notes = document.getElementById('d-notes').value;
+  saveJobs();
+}
+
+async function updateField(field, value) {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+  job[field] = value;
+  await saveJobs();
+}
+
+async function updateApplyUrl(value) {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+  job.applyUrl = value;
+  const applyLink = document.getElementById('d-apply');
+  applyLink.href = value;
+  applyLink.style.display = value ? 'inline-block' : 'none';
+  await saveJobs();
+}
+
+async function deleteJob() {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+  if (!confirm('Archive this job? It will be hidden but recoverable.')) return;
+  job.archived = true;
+  await saveJobs();
+  jobs = jobs.filter(j => String(j.id) !== String(selectedJobId));
+  closeDetail();
+  updateStats();
+  renderJobs();
+}
+
+// ── FILTERS ───────────────────────────────────────────────
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderJobs();
+}
+
+// ── STATS ─────────────────────────────────────────────────
+function updateStats() {
+  const counts = { new: 0, applied: 0, interview: 0, offer: 0, rejected: 0 };
+  jobs.forEach(j => { if (counts[j.status] !== undefined) counts[j.status]++; });
+
+  document.getElementById('stat-total').textContent = jobs.length;
+  document.getElementById('stat-new').textContent = counts.new;
+  document.getElementById('stat-applied').textContent = counts.applied;
+  document.getElementById('stat-interview').textContent = counts.interview;
+  document.getElementById('ps-new').textContent = counts.new;
+  document.getElementById('ps-applied').textContent = counts.applied;
+  document.getElementById('ps-interview').textContent = counts.interview;
+  document.getElementById('ps-rejected').textContent = counts.rejected;
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function scoreClass(s) {
+  if (s >= 80) return 'score-high';
+  if (s >= 65) return 'score-mid';
+  if (s >= 50) return 'score-low';
+  return 'score-skip';
+}
+
+function scoreBgClass(s) {
+  if (s >= 80) return 'bg-high';
+  if (s >= 65) return 'bg-mid';
+  return 'bg-low';
+}
+
+function addToPipeline() {
+  if (!currentScoreData) return;
+
+  const job = {
+    id: Date.now() + Math.random(),
+    title: extractTitle(currentListing),
+    company: extractCompany(currentListing),
+    listing: currentListing,
+    score: currentScoreData.score,
+    resumeUsed: currentScoreData.bestResume || selectedResume,
+    feedback: currentScoreData.feedback,
+    keywords: {
+      matches: currentScoreData.strengths || [],
+      missing: currentScoreData.trueGaps || [],
+      addToResume: currentScoreData.addToResume || [],
+      hardDisqualifiers: currentScoreData.hardDisqualifiers || [],
+    },
+    status: 'new',
+    addedAt: new Date().toISOString(),
+    notes: '',
+    applyUrl: document.getElementById('job-url-input').value.trim(),
+    source: document.getElementById('job-source-input').value,
+  };
+
+  jobs.unshift(job);
+  saveJobs();
+  renderJobs();
+  updateStats();
+
+  document.getElementById('score-result').style.display = 'none';
+  document.getElementById('job-input').value = '';
+  currentScoreData = null;
+  document.getElementById('job-url-input').value = '';
+  document.getElementById('job-source-input').value = 'linkedin';
+}
+
+function extractTitle(text) {
+  const lines = text.split('\n').filter(l => l.trim());
+  return lines[0]?.slice(0, 60) || 'Untitled Role';
+}
+
+function extractCompany(text) {
+  const match = text.match(/at\s+([A-Z][^\n,]+)/);
+  return match ? match[1].trim().slice(0, 40) : 'Unknown Company';
+}
+
+function importJobs(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      let added = 0;
+
+      imported.forEach(job => {
+        const exists = jobs.some(j =>
+          j.title === job.title && j.company === job.company
+        );
+        if (!exists) {
+          jobs.unshift({
+            id: job.id || Date.now() + Math.random(),
+            title: job.title || 'Untitled',
+            company: job.company || 'Unknown',
+            listing: job.listing || '',
+            score: job.score || 0,
+            resumeUsed: job.resumeUsed || 'CSM',
+            feedback: job.feedback || '',
+            keywords: job.keywords || { matches: [], missing: [] },
+            status: 'new',
+            addedAt: job.addedAt || new Date().toISOString(),
+            notes: '',
+            applyUrl: job.applyUrl || '',
+            source: job.source || 'auto',
+          });
+          added++;
+        }
+      });
+
+      saveJobs();
+      renderJobs();
+      updateStats();
+      document.getElementById('import-status').textContent = `✓ ${added} jobs imported`;
+      event.target.value = '';
+    } catch(err) {
+      document.getElementById('import-status').textContent = '✕ Error reading file';
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ── STORAGE ───────────────────────────────────────────────
+async function saveJobs() {
+  const { error } = await db.from('jobs').upsert(
+    jobs.map(j => ({
+      id: String(j.id),
+      title: j.title,
+      company: j.company,
+      location: j.location || '',
+      listing: j.listing,
+      apply_url: j.applyUrl || '',
+      score: j.score,
+      resume_used: j.resumeUsed,
+      feedback: j.feedback,
+      keywords: j.keywords,
+      status: j.status,
+      added_at: j.addedAt,
+      notes: j.notes || '',
+      source: j.source || 'manual',
+      source: j.source || 'manual',
+      linkedin_url: j.linkedinUrl || '',
+      archived: j.archived || false,
+      rejection_reason: j.rejectionReason || '',
+      resume_pdf_url: j.resumePdfUrl || null,
+      resume_docx_url: j.resumeDocxUrl || null,
+    }))
+  );
+  if (error) console.error('Save error:', error);
+}
+
+// ── RESUME UPLOAD ─────────────────────────────────────────
+async function uploadResume(type) {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+
+  const accept = type === 'pdf' ? '.pdf' : '.docx';
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = accept;
+  input.onchange = async function() {
+    const file = input.files[0];
+    if (!file) return;
+
+    const statusEl = document.getElementById(`resume-${type}-status`);
+    statusEl.textContent = 'Uploading...';
+
+    const path = `${job.id}/${file.name}`;
+    const { data, error } = await db.storage.from('resumes').upload(path, file, { upsert: true });
+
+    if (error) {
+      statusEl.textContent = '✕ Upload failed: ' + error.message;
+      return;
+    }
+
+    const { data: urlData } = db.storage.from('resumes').getPublicUrl(path);
+    const url = urlData.publicUrl;
+
+    if (type === 'pdf') {
+      job.resumePdfUrl = url;
+    } else {
+      job.resumeDocxUrl = url;
+    }
+
+    await saveJobs();
+    renderResumeSection(job);
+    statusEl.textContent = '✓ Uploaded';
+  };
+  input.click();
+}
+
+function renderResumeSection(job) {
+  const pdfEl = document.getElementById('resume-pdf-btn');
+  const docxEl = document.getElementById('resume-docx-btn');
+
+  if (job.resumePdfUrl) {
+    pdfEl.innerHTML = `<a href="${job.resumePdfUrl}" target="_blank" style="color:var(--accent);text-decoration:none;">⬇ Download PDF Resume</a>
+      <button onclick="uploadResume('pdf')" style="margin-left:8px;font-size:0.7rem;background:none;border:none;color:var(--text3);cursor:pointer;text-decoration:underline;">Replace</button>`;
+  } else {
+    pdfEl.innerHTML = `<button onclick="uploadResume('pdf')" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:6px 12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text2);">⬆ Upload PDF Resume</button>`;
+  }
+
+  if (job.resumeDocxUrl) {
+    docxEl.innerHTML = `<a href="${job.resumeDocxUrl}" target="_blank" style="color:var(--accent);text-decoration:none;">⬇ Download Word Resume</a>
+      <button onclick="uploadResume('docx')" style="margin-left:8px;font-size:0.7rem;background:none;border:none;color:var(--text3);cursor:pointer;text-decoration:underline;">Replace</button>`;
+  } else {
+    docxEl.innerHTML = `<button onclick="uploadResume('docx')" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:6px 12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text2);">⬆ Upload Word Resume</button>`;
+  }
+}
+</script>
+</body>
+</html>
