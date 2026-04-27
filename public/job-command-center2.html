@@ -4,47 +4,52 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Job Command Center — Adam Grossman</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
-   --bg: #f4f5f7;
-  --surface: #ffffff;
-  --surface2: #f0f1f4;
-  --border: #e2e4ea;
-  --border2: #d0d3dc;
-  --accent: #2563eb;
-  --accent2: #0ea5e9;
-  --gold: #d97706;
-  --red: #dc2626;
-  --orange: #ea580c;
-  --text: #1a1d26;
-  --text2: #5a5f72;
-  --text3: #9a9fb0;
+    --bg: #FFF4E0;
+    --paper: #F8E8C8;
+    --surface: #FFF4E0;
+    --surface2: #F0DDB8;
+    --border: #E0C898;
+    --border2: #C8B07A;
+    --accent: #E63946;
+    --accent2: #2A9D8F;
+    --gold: #F4A261;
+    --red: #E63946;
+    --orange: #F4A261;
+    --text: #1F1A14;
+    --text2: #5C4A2A;
+    --text3: #9A8060;
+    --shadow: 3px 3px 0px #1F1A14;
+    --shadow-sm: 2px 2px 0px #1F1A14;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Syne', sans-serif;
+    font-family: 'Familjen Grotesk', sans-serif;
     background: var(--bg);
     color: var(--text);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C8B07A' fill-opacity='0.15'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
-  /* ── HEADER ── */
+  /* HEADER */
   header {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    background: var(--accent);
+    border-bottom: 3px solid var(--text);
     padding: 0 2rem;
-    height: 60px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 3px 0 var(--text);
   }
 
   .header-left {
@@ -54,20 +59,25 @@
   }
 
   .logo {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: -0.5px;
+    font-family: 'Caprasimo', cursive;
+    font-size: 1.4rem;
+    color: var(--bg);
+    letter-spacing: 0px;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
   }
 
   .logo span {
-    color: var(--text2);
+    font-family: 'Familjen Grotesk', sans-serif;
+    color: rgba(255,244,224,0.75);
     font-weight: 400;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    margin-left: 4px;
   }
 
   .header-stats {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: center;
   }
 
@@ -76,136 +86,155 @@
     align-items: center;
     gap: 6px;
     font-size: 0.78rem;
-    color: var(--text2);
-    font-family: 'DM Mono', monospace;
+    color: rgba(255,244,224,0.85);
+    font-family: 'Space Mono', monospace;
+    background: rgba(0,0,0,0.15);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
   }
 
   .stat-pill strong {
-    color: var(--text);
-    font-weight: 500;
+    color: var(--bg);
+    font-weight: 700;
   }
 
   .stat-dot {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
-    background: var(--accent);
+    background: var(--bg);
   }
 
-  /* ── LAYOUT ── */
+  /* LAYOUT */
   .app {
     display: grid;
-    grid-template-columns: 320px 1fr;
+    grid-template-columns: 300px 1fr;
     flex: 1;
     overflow: hidden;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 64px);
   }
 
-  /* ── LEFT PANEL ── */
+  /* LEFT PANEL */
   .left-panel {
-    background: var(--surface);
-    border-right: 1px solid var(--border);
+    background: var(--paper);
+    border-right: 3px solid var(--text);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
+
+  .left-panel::-webkit-scrollbar { width: 4px; }
+  .left-panel::-webkit-scrollbar-track { background: transparent; }
+  .left-panel::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
   .panel-section {
     padding: 1.25rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
   }
 
   .panel-label {
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text3);
+    font-family: 'Caprasimo', cursive;
+    font-size: 0.85rem;
+    color: var(--accent);
     margin-bottom: 0.75rem;
+    letter-spacing: 0.5px;
   }
 
-  /* Score input area */
   textarea {
     width: 100%;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
+    background: var(--surface);
+    border: 2px solid var(--border2);
+    border-radius: 6px;
     color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.78rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.73rem;
     padding: 0.75rem;
     resize: none;
-    height: 140px;
+    height: 130px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.15s;
     line-height: 1.5;
+    box-shadow: var(--shadow-sm);
   }
 
-  textarea:focus {
-    border-color: var(--accent);
-  }
-
-  textarea::placeholder {
-    color: var(--text3);
-  }
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--text3); }
 
   .resume-select {
     display: flex;
-    gap: 0.5rem;
-    margin: 0.75rem 0;
+    gap: 0.4rem;
+    margin: 0.65rem 0;
     flex-wrap: wrap;
   }
 
   .resume-btn {
     flex: 1;
-    min-width: 60px;
-    padding: 6px 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
-    border-radius: 6px;
+    min-width: 55px;
+    padding: 5px 6px;
+    background: var(--surface);
+    border: 2px solid var(--border2);
+    border-radius: 4px;
     color: var(--text2);
-    font-family: 'Syne', sans-serif;
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.12s;
     text-align: center;
+    box-shadow: var(--shadow-sm);
   }
 
   .resume-btn.active {
     background: var(--accent);
     color: var(--bg);
-    border-color: var(--accent);
+    border-color: var(--text);
+    box-shadow: var(--shadow-sm);
   }
 
   .resume-btn:hover:not(.active) {
     border-color: var(--accent);
     color: var(--accent);
+    transform: translateY(-1px);
   }
 
   .score-btn {
     width: 100%;
     padding: 10px;
     background: var(--accent);
-    border: none;
-    border-radius: 8px;
+    border: 2px solid var(--text);
+    border-radius: 6px;
     color: var(--bg);
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-family: 'Caprasimo', cursive;
+    font-size: 0.9rem;
     cursor: pointer;
-    transition: opacity 0.15s;
+    transition: all 0.12s;
     letter-spacing: 0.3px;
+    box-shadow: var(--shadow);
   }
 
-  .score-btn:hover { opacity: 0.88; }
-  .score-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .score-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0px var(--text);
+  }
+
+  .score-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px var(--text);
+  }
+
+  .score-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
 
   .score-btn.secondary {
-    background: var(--surface2);
-    border: 1px solid var(--border2);
+    background: var(--surface);
+    border: 2px solid var(--border2);
     color: var(--text2);
     margin-top: 0.5rem;
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    box-shadow: var(--shadow-sm);
   }
 
   .score-btn.secondary:hover {
@@ -214,15 +243,18 @@
   }
 
   .score-btn.import-btn {
-    background: var(--surface2);
-    border: 1px solid var(--accent2);
+    background: var(--surface);
+    border: 2px solid var(--accent2);
     color: var(--accent2);
     margin-top: 0.5rem;
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.82rem;
+    box-shadow: 2px 2px 0px var(--accent2);
   }
 
-  .score-btn.import-btn:hover { opacity: 0.8; }
+  .score-btn.import-btn:hover { opacity: 0.82; }
 
-  /* Score result */
   #score-result {
     display: none;
     margin-top: 0.75rem;
@@ -231,43 +263,46 @@
   .score-display {
     text-align: center;
     padding: 1rem;
-    background: var(--surface2);
+    background: var(--surface);
     border-radius: 8px;
-    border: 1px solid var(--border2);
+    border: 2px solid var(--border2);
+    box-shadow: var(--shadow);
   }
 
   .score-number {
-    font-size: 3rem;
-    font-weight: 800;
+    font-family: 'Caprasimo', cursive;
+    font-size: 3.2rem;
     line-height: 1;
-    font-family: 'DM Mono', monospace;
   }
 
   .score-label {
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     color: var(--text2);
     margin-top: 4px;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
   }
 
   .score-resume-rec {
     display: inline-block;
     margin-top: 8px;
-    padding: 3px 10px;
+    padding: 3px 12px;
     border-radius: 20px;
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+    border: 2px solid currentColor;
   }
 
   .score-feedback {
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     color: var(--text2);
     margin-top: 0.75rem;
-    line-height: 1.6;
-    font-family: 'Lora', serif;
+    line-height: 1.65;
+    font-family: 'Familjen Grotesk', sans-serif;
     font-style: italic;
     text-align: left;
   }
@@ -275,40 +310,40 @@
   .keywords-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: 5px;
     margin-top: 0.75rem;
   }
 
   .kw {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.68rem;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 0.67rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    border: 1px solid currentColor;
   }
 
-  .kw.match { background: rgba(79,255,176,0.12); color: var(--accent); }
-  .kw.miss { background: rgba(255,92,92,0.12); color: var(--red); }
+  .kw.match { background: rgba(42,157,143,0.12); color: var(--accent2); }
+  .kw.miss { background: rgba(230,57,70,0.1); color: var(--red); }
 
   .add-pipeline-btn {
     width: 100%;
     margin-top: 0.75rem;
     padding: 8px;
-    background: transparent;
-    border: 1px solid var(--accent);
+    background: var(--accent2);
+    border: 2px solid var(--text);
     border-radius: 6px;
-    color: var(--accent);
-    font-family: 'Syne', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 700;
+    color: var(--bg);
+    font-family: 'Caprasimo', cursive;
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.15s;
-    letter-spacing: 0.5px;
+    transition: all 0.12s;
+    box-shadow: var(--shadow-sm);
   }
 
   .add-pipeline-btn:hover {
-    background: var(--accent);
-    color: var(--bg);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow);
   }
 
   /* Pipeline stats */
@@ -319,26 +354,27 @@
   }
 
   .pipeline-stat {
-    background: var(--surface2);
-    border-radius: 6px;
+    background: var(--surface);
+    border-radius: 8px;
     padding: 0.75rem;
     text-align: center;
-    border: 1px solid var(--border);
+    border: 2px solid var(--border2);
+    box-shadow: var(--shadow-sm);
   }
 
   .pipeline-stat-num {
-    font-size: 1.5rem;
-    font-weight: 800;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Caprasimo', cursive;
+    font-size: 1.8rem;
     line-height: 1;
   }
 
   .pipeline-stat-label {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     color: var(--text3);
     margin-top: 3px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    font-family: 'Space Mono', monospace;
   }
 
   /* Filters */
@@ -350,38 +386,38 @@
 
   .filter-btn {
     padding: 5px 12px;
-    background: var(--surface2);
-    border: 1px solid var(--border2);
+    background: var(--surface);
+    border: 2px solid var(--border2);
     border-radius: 20px;
     color: var(--text2);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Familjen Grotesk', sans-serif;
     font-size: 0.72rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.12s;
+    box-shadow: var(--shadow-sm);
   }
 
   .filter-btn.active {
     background: var(--accent);
     color: var(--bg);
-    border-color: var(--accent);
+    border-color: var(--text);
   }
 
   .filter-btn:hover:not(.active) {
-    border-color: var(--text2);
-    color: var(--text);
+    border-color: var(--accent);
+    color: var(--accent);
   }
 
-  /* Import status */
   #import-status {
     font-size: 0.72rem;
     color: var(--accent2);
     margin-top: 0.5rem;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Space Mono', monospace;
     min-height: 16px;
   }
 
-  /* ── RIGHT PANEL ── */
+  /* RIGHT PANEL */
   .right-panel {
     display: flex;
     flex-direction: column;
@@ -390,32 +426,35 @@
 
   .right-header {
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 2px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: var(--surface);
+    background: var(--paper);
   }
 
   .right-title {
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text3);
+    font-family: 'Caprasimo', cursive;
+    font-size: 1rem;
+    color: var(--text);
+    letter-spacing: 0.5px;
   }
 
   .job-count {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.78rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
     color: var(--text2);
+    background: var(--surface2);
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
   }
 
   /* Job list */
   .job-list {
     flex: 1;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 1.25rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 1rem;
@@ -429,31 +468,34 @@
   }
 
   .kanban-header {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text3);
-    padding: 0.5rem 0;
-    border-bottom: 2px solid var(--border);
+    font-family: 'Caprasimo', cursive;
+    font-size: 0.85rem;
+    color: var(--text);
+    padding: 0.6rem 0.75rem;
+    border-bottom: none;
     margin-bottom: 0.25rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background: var(--paper);
+    border: 2px solid var(--text);
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
   }
 
   .kanban-count {
-    background: var(--surface2);
+    background: var(--accent);
+    color: var(--bg);
     border-radius: 20px;
-    padding: 2px 8px;
+    padding: 2px 9px;
+    font-family: 'Space Mono', monospace;
     font-size: 0.7rem;
-    color: var(--text2);
+    font-weight: 700;
+    border: 1px solid var(--text);
   }
 
   @media (max-width: 768px) {
-    .job-list {
-      grid-template-columns: 1fr;
-    }
+    .job-list { grid-template-columns: 1fr; }
   }
 
   .job-list::-webkit-scrollbar { width: 4px; }
@@ -462,86 +504,90 @@
 
   .job-card {
     background: var(--surface);
-    border: 1px solid var(--border);
+    border: 2px solid var(--border2);
     border-radius: 10px;
-    padding: 1rem 1.25rem;
+    padding: 1rem 1.1rem;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.12s;
     position: relative;
+    box-shadow: var(--shadow-sm);
   }
 
   .job-card:hover {
-    border-color: var(--border2);
-    background: var(--surface2);
+    border-color: var(--accent);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow);
   }
 
   .job-card.selected {
     border-color: var(--accent);
-    background: var(--surface2);
+    background: #FFF0E8;
+    box-shadow: var(--shadow);
   }
 
   .job-card-top {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
-  .job-title-co {
-    flex: 1;
-  }
+  .job-title-co { flex: 1; }
 
   .job-title {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: var(--text);
     line-height: 1.3;
+    font-family: 'Familjen Grotesk', sans-serif;
   }
 
   .job-company {
-    font-size: 0.78rem;
+    font-size: 0.73rem;
     color: var(--text2);
     margin-top: 2px;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Space Mono', monospace;
   }
 
   .job-score-badge {
-    font-family: 'DM Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 500;
-    padding: 4px 10px;
+    font-family: 'Caprasimo', cursive;
+    font-size: 1.05rem;
+    padding: 3px 9px;
     border-radius: 6px;
     white-space: nowrap;
+    border: 2px solid currentColor;
   }
 
   .job-meta {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
     flex-wrap: wrap;
   }
 
   .job-tag {
-    font-size: 0.68rem;
+    font-size: 0.63rem;
     padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: 600;
+    border-radius: 20px;
+    font-weight: 700;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+    border: 1px solid currentColor;
   }
 
-  .tag-new { background: rgba(79,255,176,0.1); color: var(--accent); }
-  .tag-applied { background: rgba(0,200,255,0.1); color: var(--accent2); }
-  .tag-interview { background: rgba(255,200,71,0.1); color: var(--gold); }
-  .tag-offer { background: rgba(79,255,176,0.2); color: var(--accent); }
-  .tag-rejected { background: rgba(255,92,92,0.1); color: var(--red); }
-  .tag-auto { background: rgba(255,140,66,0.1); color: var(--orange); }
+  .tag-new { background: rgba(42,157,143,0.1); color: var(--accent2); }
+  .tag-applied { background: rgba(244,162,97,0.1); color: var(--gold); }
+  .tag-interview { background: rgba(230,57,70,0.1); color: var(--red); }
+  .tag-offer { background: rgba(42,157,143,0.15); color: var(--accent2); }
+  .tag-rejected { background: rgba(92,74,42,0.1); color: var(--text2); }
+  .tag-auto { background: rgba(244,162,97,0.1); color: var(--gold); }
 
   .job-date {
-    font-size: 0.68rem;
+    font-size: 0.63rem;
     color: var(--text3);
-    font-family: 'DM Mono', monospace;
+    font-family: 'Space Mono', monospace;
     margin-left: auto;
   }
 
@@ -549,16 +595,17 @@
   .job-detail {
     display: none;
     position: fixed;
-    top: 60px;
+    top: 64px;
     right: 0;
     width: 1080px;
-    height: calc(100vh - 60px);
+    height: calc(100vh - 64px);
     background: var(--surface);
-    border-left: 1px solid var(--border);
+    border-left: 3px solid var(--text);
     overflow-y: auto;
     z-index: 50;
     padding: 1.5rem;
-    animation: slideIn 0.2s ease;
+    animation: slideIn 0.18s ease;
+    box-shadow: -6px 0 0 rgba(0,0,0,0.08);
   }
 
   @keyframes slideIn {
@@ -573,20 +620,27 @@
     top: 1rem;
     right: 1rem;
     background: var(--surface2);
-    border: 1px solid var(--border2);
+    border: 2px solid var(--text);
     border-radius: 6px;
-    color: var(--text2);
-    width: 32px;
-    height: 32px;
+    color: var(--text);
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 1rem;
-    transition: all 0.15s;
+    transition: all 0.12s;
+    box-shadow: var(--shadow-sm);
+    font-weight: 700;
   }
 
-  .detail-close:hover { color: var(--text); border-color: var(--text2); }
+  .detail-close:hover {
+    background: var(--accent);
+    color: var(--bg);
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow);
+  }
 
   .detail-score-row {
     display: flex;
@@ -596,9 +650,8 @@
   }
 
   .detail-score-big {
-    font-size: 3.5rem;
-    font-weight: 800;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Caprasimo', cursive;
+    font-size: 3.8rem;
     line-height: 1;
   }
 
@@ -610,8 +663,8 @@
   }
 
   .detail-company {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.82rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
     color: var(--text2);
   }
 
@@ -620,7 +673,8 @@
   }
 
   .detail-section-label {
-    font-size: 0.65rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
     font-weight: 700;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -631,15 +685,17 @@
   .status-select {
     width: 100%;
     background: var(--surface2);
-    border: 1px solid var(--border2);
+    border: 2px solid var(--border2);
     border-radius: 6px;
     color: var(--text);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Familjen Grotesk', sans-serif;
     font-size: 0.82rem;
+    font-weight: 600;
     padding: 8px 12px;
     outline: none;
     cursor: pointer;
-    transition: border-color 0.2s;
+    transition: border-color 0.15s;
+    box-shadow: var(--shadow-sm);
   }
 
   .status-select:focus { border-color: var(--accent); }
@@ -647,81 +703,93 @@
   .notes-input {
     width: 100%;
     background: var(--surface2);
-    border: 1px solid var(--border2);
+    border: 2px solid var(--border2);
     border-radius: 6px;
     color: var(--text);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.78rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.73rem;
     padding: 8px 12px;
     height: 80px;
     resize: none;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.15s;
     line-height: 1.5;
   }
 
   .notes-input:focus { border-color: var(--accent); }
 
   .detail-feedback {
-    font-family: 'Lora', serif;
+    font-family: 'Familjen Grotesk', sans-serif;
     font-style: italic;
     font-size: 0.88rem;
     color: var(--text2);
     line-height: 1.7;
-    padding: 0.75rem;
-    background: var(--surface2);
+    padding: 0.85rem 1rem;
+    background: var(--paper);
     border-radius: 6px;
-    border-left: 3px solid var(--accent);
+    border-left: 4px solid var(--accent);
+    border: 2px solid var(--border);
+    border-left: 4px solid var(--accent);
+    box-shadow: var(--shadow-sm);
   }
 
   .detail-description {
-    font-size: 0.78rem;
+    font-size: 0.73rem;
     color: var(--text2);
     line-height: 1.7;
-    font-family: 'DM Mono', monospace;
+    font-family: 'Space Mono', monospace;
     max-height: 200px;
     overflow-y: auto;
     padding: 0.75rem;
     background: var(--surface2);
     border-radius: 6px;
     white-space: pre-wrap;
+    border: 2px solid var(--border2);
   }
 
   .apply-link {
     display: block;
     width: 100%;
     padding: 10px;
-    background: var(--accent);
+    background: var(--accent2);
     color: var(--bg);
     text-align: center;
     border-radius: 8px;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-family: 'Caprasimo', cursive;
+    font-size: 0.9rem;
     text-decoration: none;
-    transition: opacity 0.15s;
+    transition: all 0.12s;
     margin-top: 0.75rem;
+    border: 2px solid var(--text);
+    box-shadow: var(--shadow);
   }
 
-  .apply-link:hover { opacity: 0.88; }
+  .apply-link:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: var(--shadow);
+    opacity: 0.92;
+  }
 
   .delete-btn {
     display: block;
     width: 100%;
     padding: 8px;
     background: transparent;
-    border: 1px solid rgba(255,92,92,0.3);
+    border: 2px solid rgba(230,57,70,0.4);
     border-radius: 6px;
     color: var(--red);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Familjen Grotesk', sans-serif;
     font-size: 0.78rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
     margin-top: 0.5rem;
-    transition: all 0.15s;
+    transition: all 0.12s;
   }
 
-  .delete-btn:hover { background: rgba(255,92,92,0.08); border-color: var(--red); }
+  .delete-btn:hover {
+    background: rgba(230,57,70,0.08);
+    border-color: var(--red);
+  }
 
   /* Empty state */
   .empty-state {
@@ -743,15 +811,17 @@
 
   .empty-text {
     font-size: 0.88rem;
-    line-height: 1.6;
+    line-height: 1.7;
     max-width: 280px;
+    font-family: 'Familjen Grotesk', sans-serif;
+    font-style: italic;
   }
 
   /* Loading */
   .loading-bar {
     display: none;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
     animation: loadSlide 1.2s ease infinite;
     border-radius: 2px;
     margin-top: 0.5rem;
@@ -766,14 +836,19 @@
   .loading-bar.active { display: block; }
 
   /* Score color helpers */
-  .score-high { color: var(--accent); }
+  .score-high { color: var(--accent2); }
   .score-mid { color: var(--gold); }
   .score-low { color: var(--orange); }
   .score-skip { color: var(--red); }
 
-  .bg-high { background: rgba(79,255,176,0.1); border-color: rgba(79,255,176,0.3); }
-  .bg-mid { background: rgba(255,200,71,0.1); border-color: rgba(255,200,71,0.3); }
-  .bg-low { background: rgba(255,140,66,0.1); border-color: rgba(255,140,66,0.3); }
+  .bg-high { background: rgba(42,157,143,0.1); border-color: rgba(42,157,143,0.4); }
+  .bg-mid { background: rgba(244,162,97,0.1); border-color: rgba(244,162,97,0.4); }
+  .bg-low { background: rgba(230,57,70,0.08); border-color: rgba(230,57,70,0.3); }
+
+  /* Input styles for inline inputs */
+  input[type="url"], input[type="password"], input[type="text"] {
+    font-family: 'Space Mono', monospace;
+  }
 
   @media (max-width: 768px) {
     .app {
@@ -781,39 +856,17 @@
       height: auto;
       overflow: visible;
     }
-
     .left-panel {
       border-right: none;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 3px solid var(--text);
       overflow: visible;
     }
-
-    .right-panel {
-      height: auto;
-      overflow: visible;
-    }
-
-    .job-list {
-      overflow: visible;
-      max-height: none;
-      grid-template-columns: 1fr;
-    }
-
-    .job-detail {
-      width: 100%;
-      left: 0;
-      right: 0;
-    }
-
-    .header-stats {
-      display: none;
-    }
-
-    body {
-      overflow: auto;
-    }
+    .right-panel { height: auto; overflow: visible; }
+    .job-list { overflow: visible; max-height: none; grid-template-columns: 1fr; }
+    .job-detail { width: 100%; left: 0; right: 0; }
+    .header-stats { display: none; }
+    body { overflow: auto; }
   }
-
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -840,13 +893,13 @@
     <div class="panel-section">
       <div class="panel-label">Score a Listing</div>
       <textarea id="job-input" placeholder="Paste job description here..."></textarea>
-      <input type="url" id="job-url-input" placeholder="Paste job URL here (optional)..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;margin:0.5rem 0;">
-      <select id="job-source-input" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Syne',sans-serif;font-size:0.78rem;padding:8px 10px;outline:none;margin-bottom:0.5rem;">
-      <option value="linkedin">LinkedIn</option>
-      <option value="indeed">Indeed</option>
-      <option value="company">Company Website</option>
-      <option value="referral">Referral</option>
-      <option value="other">Other</option>
+      <input type="url" id="job-url-input" placeholder="Paste job URL here (optional)..." style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;margin:0.5rem 0;box-shadow:var(--shadow-sm);">
+      <select id="job-source-input" style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Familjen Grotesk',sans-serif;font-weight:600;font-size:0.78rem;padding:8px 10px;outline:none;margin-bottom:0.5rem;box-shadow:var(--shadow-sm);">
+        <option value="linkedin">LinkedIn</option>
+        <option value="indeed">Indeed</option>
+        <option value="company">Company Website</option>
+        <option value="referral">Referral</option>
+        <option value="other">Other</option>
       </select>
       <div class="resume-select">
         <button class="resume-btn active" onclick="selectResume('AUTO')">AUTO</button>
@@ -871,14 +924,13 @@
 
     <!-- Auto Import -->
     <div class="panel-section">
-  <div class="panel-label">Auto Import</div>
-  <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJobs(event)">
-  <button class="score-btn import-btn" onclick="document.getElementById('import-file').click()">
-    ⬆ Import Fetched Jobs
-  </button>
-
-  <div id="import-status"></div>
-  </div>
+      <div class="panel-label">Auto Import</div>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJobs(event)">
+      <button class="score-btn import-btn" onclick="document.getElementById('import-file').click()">
+        ⬆ Import Fetched Jobs
+      </button>
+      <div id="import-status"></div>
+    </div>
 
     <!-- Pipeline Stats -->
     <div class="panel-section">
@@ -889,11 +941,11 @@
           <div class="pipeline-stat-label">New</div>
         </div>
         <div class="pipeline-stat">
-          <div class="pipeline-stat-num score-mid" id="ps-applied">0</div>
+          <div class="pipeline-stat-num" style="color:var(--gold)" id="ps-applied">0</div>
           <div class="pipeline-stat-label">Applied</div>
         </div>
         <div class="pipeline-stat">
-          <div class="pipeline-stat-num" style="color:var(--accent2)" id="ps-interview">0</div>
+          <div class="pipeline-stat-num" style="color:var(--accent)" id="ps-interview">0</div>
           <div class="pipeline-stat-label">Interview</div>
         </div>
         <div class="pipeline-stat">
@@ -906,9 +958,9 @@
     <!-- API Key -->
     <div class="panel-section">
       <div class="panel-label">Anthropic API Key</div>
-      <input type="password" id="api-key-input" placeholder="sk-ant-..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;">
+      <input type="password" id="api-key-input" placeholder="sk-ant-..." style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);">
       <button class="score-btn secondary" onclick="saveKey()" style="margin-top:0.5rem;">Save Key</button>
-      <div id="key-status" style="font-size:0.7rem;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace;"></div>
+      <div id="key-status" style="font-size:0.7rem;color:var(--text3);margin-top:4px;font-family:'Space Mono',monospace;"></div>
     </div>
 
   </div>
@@ -934,61 +986,59 @@
   <button class="detail-close" onclick="closeDetail()">✕</button>
 
   <div class="detail-score-row">
-  <div class="detail-score-big" id="d-score">—</div>
-  <div style="flex:1;">
-    <input type="text" id="d-title" style="font-size:1.15rem;font-weight:700;color:var(--text);background:transparent;border:none;border-bottom:1px solid var(--border2);width:100%;outline:none;padding:2px 0;margin-bottom:4px;" onchange="updateField('title', this.value)">
-    <input type="text" id="d-company" style="font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--text2);background:transparent;border:none;border-bottom:1px solid var(--border2);width:100%;outline:none;padding:2px 0;" onchange="updateField('company', this.value)">
+    <div class="detail-score-big" id="d-score">—</div>
+    <div style="flex:1;">
+      <input type="text" id="d-title" style="font-size:1.15rem;font-weight:700;color:var(--text);background:transparent;border:none;border-bottom:2px solid var(--border2);width:100%;outline:none;padding:2px 0;margin-bottom:4px;font-family:'Familjen Grotesk',sans-serif;" onchange="updateField('title', this.value)">
+      <input type="text" id="d-company" style="font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--text2);background:transparent;border:none;border-bottom:2px solid var(--border2);width:100%;outline:none;padding:2px 0;" onchange="updateField('company', this.value)">
+    </div>
   </div>
-</div>
 
-<div style="margin-bottom:0.75rem;">
-  <div class="detail-section-label">LinkedIn URL</div>
-  <input type="text" id="d-linkedin-url" placeholder="Paste LinkedIn job URL here..." style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;" onchange="updateField('linkedinUrl', this.value)">
-</div>
-
-<div style="margin-bottom:1rem;">
-  <div class="detail-section-label">Company Apply URL</div>
-  <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
-    <input type="text" id="d-apply-input" placeholder="Paste direct company apply URL..." style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;" onchange="updateApplyUrl(this.value)">
-    <a class="apply-link" id="d-apply" href="#" target="_blank" style="white-space:nowrap;padding:8px 12px;margin:0;font-size:0.78rem;display:none;">Apply →</a>
+  <div style="margin-bottom:0.75rem;">
+    <div class="detail-section-label">LinkedIn URL</div>
+    <input type="text" id="d-linkedin-url" placeholder="Paste LinkedIn job URL here..." style="width:100%;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);" onchange="updateField('linkedinUrl', this.value)">
   </div>
-</div>
 
-<div style="margin-bottom:1rem;">
-  <div class="detail-section-label">Source</div>
-  <select id="d-source" class="status-select" onchange="updateField('source', this.value)">
-    <option value="linkedin">LinkedIn</option>
-    <option value="indeed">Indeed</option>
-    <option value="company">Company Website</option>
-    <option value="adzuna">Adzuna</option>
-    <option value="referral">Referral</option>
-    <option value="other">Other</option>
-  </select>
-</div>
-
-
-
-<div class="detail-section">
-  <div class="detail-section-label" style="display:flex;justify-content:space-between;align-items:center;">
-    <span>Cover Letter</span>
-    <button onclick="generateCoverLetter()" id="cover-letter-btn" style="padding:4px 10px;background:var(--accent);border:none;border-radius:6px;color:#fff;font-family:'Syne',sans-serif;font-size:0.7rem;font-weight:700;cursor:pointer;">Generate</button>
+  <div style="margin-bottom:1rem;">
+    <div class="detail-section-label">Company Apply URL</div>
+    <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+      <input type="text" id="d-apply-input" placeholder="Paste direct company apply URL..." style="flex:1;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);" onchange="updateApplyUrl(this.value)">
+      <a class="apply-link" id="d-apply" href="#" target="_blank" style="white-space:nowrap;padding:8px 14px;margin:0;font-size:0.82rem;display:none;">Apply →</a>
+    </div>
   </div>
-  <div id="cover-letter-loading" style="display:none;font-size:0.72rem;color:var(--text3);font-family:'DM Mono',monospace;margin:8px 0;">Generating cover letter...</div>
-  <textarea id="d-cover-letter" class="notes-input" style="height:300px;font-size:0.78rem;line-height:1.7;margin-top:8px;" placeholder="Generate a cover letter or paste your own..." onblur="updateField('coverLetter', this.value)"></textarea>
-  <div style="display:flex;gap:8px;margin-top:8px;">
-    <button onclick="copyCoverLetter()" style="flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;">Copy Text</button>
-    <button onclick="downloadCoverLetter()" style="flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;">Download PDF</button>
-  </div>
-</div>
 
-<div class="detail-section">
-  <div class="detail-section-label">Ask About This Role</div>
-  <div style="display:flex;gap:8px;margin-bottom:0.75rem;">
-    <input type="text" id="d-qa-input" placeholder="e.g. What should I emphasize in my cover letter?" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;">
-    <button onclick="askQuestion()" style="padding:8px 14px;background:var(--accent);border:none;border-radius:6px;color:#fff;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;">Ask</button>
+  <div style="margin-bottom:1rem;">
+    <div class="detail-section-label">Source</div>
+    <select id="d-source" class="status-select" onchange="updateField('source', this.value)">
+      <option value="linkedin">LinkedIn</option>
+      <option value="indeed">Indeed</option>
+      <option value="company">Company Website</option>
+      <option value="adzuna">Adzuna</option>
+      <option value="referral">Referral</option>
+      <option value="other">Other</option>
+    </select>
   </div>
-  <div id="d-qa-history" style="display:flex;flex-direction:column;gap:0.75rem;max-height:300px;overflow-y:auto;"></div>
-</div>
+
+  <div class="detail-section">
+    <div class="detail-section-label" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>Cover Letter</span>
+      <button onclick="generateCoverLetter()" id="cover-letter-btn" style="padding:5px 12px;background:var(--accent);border:2px solid var(--text);border-radius:6px;color:var(--bg);font-family:'Caprasimo',cursive;font-size:0.75rem;cursor:pointer;box-shadow:var(--shadow-sm);">Generate</button>
+    </div>
+    <div id="cover-letter-loading" style="display:none;font-size:0.72rem;color:var(--text3);font-family:'Space Mono',monospace;margin:8px 0;">Generating cover letter...</div>
+    <textarea id="d-cover-letter" class="notes-input" style="height:300px;font-size:0.73rem;line-height:1.7;margin-top:8px;" placeholder="Generate a cover letter or paste your own..." onblur="updateField('coverLetter', this.value)"></textarea>
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button onclick="copyCoverLetter()" style="flex:1;padding:8px;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Familjen Grotesk',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow-sm);">Copy Text</button>
+      <button onclick="downloadCoverLetter()" style="flex:1;padding:8px;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Familjen Grotesk',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;box-shadow:var(--shadow-sm);">Download PDF</button>
+    </div>
+  </div>
+
+  <div class="detail-section">
+    <div class="detail-section-label">Ask About This Role</div>
+    <div style="display:flex;gap:8px;margin-bottom:0.75rem;">
+      <input type="text" id="d-qa-input" placeholder="e.g. What should I emphasize in my cover letter?" style="flex:1;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);">
+      <button onclick="askQuestion()" style="padding:8px 14px;background:var(--accent2);border:2px solid var(--text);border-radius:6px;color:var(--bg);font-family:'Caprasimo',cursive;font-size:0.82rem;cursor:pointer;white-space:nowrap;box-shadow:var(--shadow-sm);">Ask</button>
+    </div>
+    <div id="d-qa-history" style="display:flex;flex-direction:column;gap:0.75rem;max-height:300px;overflow-y:auto;"></div>
+  </div>
 
   <div class="detail-section">
     <div class="detail-section-label">AI Feedback</div>
@@ -1018,14 +1068,14 @@
   <div class="detail-section">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
       <div class="detail-section-label" style="margin-bottom:0;">Contacts</div>
-      <button onclick="addContact()" style="font-size:0.7rem;font-family:'Syne',sans-serif;font-weight:700;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:3px 10px;cursor:pointer;color:var(--text2);">+ Add</button>
+      <button onclick="addContact()" style="font-size:0.7rem;font-family:'Familjen Grotesk',sans-serif;font-weight:700;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;padding:4px 10px;cursor:pointer;color:var(--text2);box-shadow:var(--shadow-sm);">+ Add</button>
     </div>
     <div id="d-contacts"></div>
   </div>
 
   <div class="detail-section">
     <div class="detail-section-label">Resume to Use</div>
-    <div style="font-family:'DM Mono',monospace;font-size:0.82rem;color:var(--accent);padding:6px 0;" id="d-resume">—</div>
+    <div style="font-family:'Caprasimo',cursive;font-size:1rem;color:var(--accent);padding:6px 0;" id="d-resume">—</div>
   </div>
 
   <div class="detail-section">
@@ -1033,19 +1083,19 @@
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:6px;">
       <div>
         <div id="resume-pdf-btn"></div>
-        <div id="resume-pdf-status" style="font-size:0.7rem;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace;"></div>
+        <div id="resume-pdf-status" style="font-size:0.7rem;color:var(--text3);margin-top:3px;font-family:'Space Mono',monospace;"></div>
       </div>
       <div>
         <div id="resume-docx-btn"></div>
-        <div id="resume-docx-status" style="font-size:0.7rem;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace;"></div>
+        <div id="resume-docx-status" style="font-size:0.7rem;color:var(--text3);margin-top:3px;font-family:'Space Mono',monospace;"></div>
       </div>
     </div>
   </div>
 
   <div class="detail-section">
-  <div class="detail-section-label">Job Description</div>
-  <textarea id="d-description" class="notes-input" style="height:200px;font-size:0.75rem;line-height:1.6;white-space:pre-wrap;" onblur="updateField('listing', this.value)">—</textarea>
-</div>
+    <div class="detail-section-label">Job Description</div>
+    <textarea id="d-description" class="notes-input" style="height:200px;font-size:0.72rem;line-height:1.6;white-space:pre-wrap;" onblur="updateField('listing', this.value)">—</textarea>
+  </div>
 
 <script>
 // ── PASSWORD PROTECTION ───────────────────────────────────
@@ -1055,7 +1105,7 @@
   if (stored === PASS) return;
   const entered = prompt('Enter password to access Job Command Center:');
   if (entered !== PASS) {
-    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#888;">Access denied.</div>';
+    document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:\'Familjen Grotesk\',sans-serif;color:#5C4A2A;background:#FFF4E0;font-size:1.1rem;">Access denied. Order\'s not up for you.</div>';
     throw new Error('Unauthorized');
   }
   sessionStorage.setItem('jcc-auth', PASS);
@@ -1222,13 +1272,13 @@ Respond ONLY with valid JSON, no other text:
 
     if (parsed.hardDisqualifiers && parsed.hardDisqualifiers.length > 0) {
       const label = document.createElement('div');
-      label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#dc2626;margin-top:8px;margin-bottom:4px;';
+      label.style = 'width:100%;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-top:8px;margin-bottom:4px;font-family:Space Mono,monospace;';
       label.textContent = 'Hard Disqualifiers';
       kwRow.appendChild(label);
       parsed.hardDisqualifiers.forEach(k => {
         const el = document.createElement('span');
         el.className = 'kw miss';
-        el.style = 'background:rgba(220,38,38,0.15);color:#dc2626;font-weight:700;';
+        el.style = 'font-weight:700;';
         el.textContent = '⚠ ' + k;
         kwRow.appendChild(el);
       });
@@ -1236,7 +1286,7 @@ Respond ONLY with valid JSON, no other text:
 
     if (parsed.strengths && parsed.strengths.length > 0) {
       const label = document.createElement('div');
-      label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2563eb;margin-top:8px;margin-bottom:4px;';
+      label.style = 'width:100%;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-top:8px;margin-bottom:4px;font-family:Space Mono,monospace;';
       label.textContent = 'Your Strengths — Lead With These';
       kwRow.appendChild(label);
       parsed.strengths.forEach(k => {
@@ -1249,13 +1299,13 @@ Respond ONLY with valid JSON, no other text:
 
     if (parsed.addToResume && parsed.addToResume.length > 0) {
       const label = document.createElement('div');
-      label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#d97706;margin-top:8px;margin-bottom:4px;';
+      label.style = 'width:100%;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-top:8px;margin-bottom:4px;font-family:Space Mono,monospace;';
       label.textContent = 'Add to Your Resume Before Applying';
       kwRow.appendChild(label);
       parsed.addToResume.forEach(k => {
         const el = document.createElement('span');
         el.className = 'kw';
-        el.style = 'background:rgba(217,119,6,0.1);color:#d97706;';
+        el.style = 'background:rgba(244,162,97,0.1);color:var(--gold);border-color:var(--gold);';
         el.textContent = k;
         kwRow.appendChild(el);
       });
@@ -1263,7 +1313,7 @@ Respond ONLY with valid JSON, no other text:
 
     if (parsed.trueGaps && parsed.trueGaps.length > 0) {
       const label = document.createElement('div');
-      label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#dc2626;margin-top:8px;margin-bottom:4px;';
+      label.style = 'width:100%;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-top:8px;margin-bottom:4px;font-family:Space Mono,monospace;';
       label.textContent = 'Genuine Skill Gaps';
       kwRow.appendChild(label);
       parsed.trueGaps.forEach(k => {
@@ -1306,11 +1356,11 @@ function renderJobs() {
         <div class="job-score-badge ${scoreBgClass(job.score)} ${scoreClass(job.score)}">${job.score}%</div>
       </div>
       <div class="job-meta">
-        <span class="job-tag" style="background:rgba(255,255,255,0.05);color:var(--text3);">${job.resumeUsed || ''}</span>
-        ${job.source === 'indeed' ? '<span class="job-tag tag-auto" style="background:rgba(0,100,255,0.1);color:#2563eb;">INDEED</span>' : ''}
-        ${job.source === 'adzuna' ? '<span class="job-tag tag-auto" style="background:rgba(255,140,0,0.1);color:#d97706;">ADZUNA</span>' : ''}
-        ${job.source === 'linkedin' ? '<span class="job-tag tag-auto" style="background:rgba(0,119,181,0.1);color:#0077b5;">LINKEDIN</span>' : ''}
-        ${job.source === 'company' ? '<span class="job-tag tag-auto" style="background:rgba(45,90,39,0.1);color:#2d5a27;">DIRECT</span>' : ''}
+        <span class="job-tag" style="background:rgba(92,74,42,0.08);color:var(--text3);border-color:var(--border2);">${job.resumeUsed || ''}</span>
+        ${job.source === 'indeed' ? '<span class="job-tag tag-auto">INDEED</span>' : ''}
+        ${job.source === 'adzuna' ? '<span class="job-tag tag-auto">ADZUNA</span>' : ''}
+        ${job.source === 'linkedin' ? '<span class="job-tag" style="background:rgba(42,157,143,0.1);color:var(--accent2);border-color:var(--accent2);">LINKEDIN</span>' : ''}
+        ${job.source === 'company' ? '<span class="job-tag" style="background:rgba(31,26,20,0.08);color:var(--text2);border-color:var(--border2);">DIRECT</span>' : ''}
         <span class="job-date">${formatDate(job.addedAt)}</span>
       </div>
     </div>`;
@@ -1322,7 +1372,7 @@ function renderJobs() {
         <span>🟢 New</span>
         <span class="kanban-count">${newJobs.length}</span>
       </div>
-      ${newJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;">No new roles</div>' : newJobs.map(renderCard).join('')}
+      ${newJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;font-style:italic;">No new roles</div>' : newJobs.map(renderCard).join('')}
     </div>
 
     <div class="kanban-column">
@@ -1330,7 +1380,7 @@ function renderJobs() {
         <span>📤 Applied</span>
         <span class="kanban-count">${appliedJobs.length}</span>
       </div>
-      ${appliedJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;">Nothing applied yet</div>' : appliedJobs.map(renderCard).join('')}
+      ${appliedJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;font-style:italic;">Nothing applied yet</div>' : appliedJobs.map(renderCard).join('')}
     </div>
 
     <div class="kanban-column">
@@ -1338,7 +1388,7 @@ function renderJobs() {
         <span>🎯 Interviews</span>
         <span class="kanban-count">${interviewJobs.length}</span>
       </div>
-      ${interviewJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;">No interviews yet</div>' : interviewJobs.map(renderCard).join('')}
+      ${interviewJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;font-style:italic;">No interviews yet</div>' : interviewJobs.map(renderCard).join('')}
     </div>
   `;
 
@@ -1348,7 +1398,7 @@ function renderJobs() {
     rejectedSection.style = 'grid-column:1/-1;margin-top:1rem;';
     rejectedSection.innerHTML = `
       <details>
-        <summary style="font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);cursor:pointer;padding:0.5rem 0;border-top:1px solid var(--border);">
+        <summary style="font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);cursor:pointer;padding:0.5rem 0;border-top:2px solid var(--border);font-family:'Space Mono',monospace;">
           ❌ Rejected (${rejectedJobs.length}) — click to expand
         </summary>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
@@ -1392,7 +1442,6 @@ function openDetail(id) {
   document.getElementById('d-description').value = job.listing || '';
   document.getElementById('d-cover-letter').value = job.coverLetter || '';
 
-
   const applyLink = document.getElementById('d-apply');
   if (job.applyUrl) {
     applyLink.href = job.applyUrl;
@@ -1405,61 +1454,61 @@ function openDetail(id) {
   document.getElementById('d-source').value = job.source || 'linkedin';
 
   const kwRow = document.getElementById('d-keywords');
-kwRow.innerHTML = '';
+  kwRow.innerHTML = '';
 
-if (job.keywords?.hardDisqualifiers?.length > 0) {
-  const label = document.createElement('div');
-  label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#dc2626;margin-top:8px;margin-bottom:4px;';
-  label.textContent = 'Hard Disqualifiers';
-  kwRow.appendChild(label);
-  job.keywords.hardDisqualifiers.forEach(k => {
-    const el = document.createElement('span');
-    el.className = 'kw miss';
-    el.style = 'background:rgba(220,38,38,0.15);color:#dc2626;font-weight:700;';
-    el.textContent = '⚠ ' + k;
-    kwRow.appendChild(el);
-  });
-}
+  if (job.keywords?.hardDisqualifiers?.length > 0) {
+    const label = document.createElement('div');
+    label.style = 'width:100%;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-top:8px;margin-bottom:4px;font-family:Space Mono,monospace;';
+    label.textContent = 'Hard Disqualifiers';
+    kwRow.appendChild(label);
+    job.keywords.hardDisqualifiers.forEach(k => {
+      const el = document.createElement('span');
+      el.className = 'kw miss';
+      el.style = 'font-weight:700;';
+      el.textContent = '⚠ ' + k;
+      kwRow.appendChild(el);
+    });
+  }
 
-if (job.keywords?.matches?.length > 0) {
-  const label = document.createElement('div');
-  label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#2563eb;margin-top:8px;margin-bottom:4px;';
-  label.textContent = 'Your Strengths — Lead With These';
-  kwRow.appendChild(label);
-  job.keywords.matches.forEach(k => {
-    const el = document.createElement('span');
-    el.className = 'kw match';
-    el.textContent = k;
-    kwRow.appendChild(el);
-  });
-}
+  if (job.keywords?.matches?.length > 0) {
+    const label = document.createElement('div');
+    label.style = 'width:100%;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent2);margin-top:8px;margin-bottom:4px;font-family:Space Mono,monospace;';
+    label.textContent = 'Your Strengths — Lead With These';
+    kwRow.appendChild(label);
+    job.keywords.matches.forEach(k => {
+      const el = document.createElement('span');
+      el.className = 'kw match';
+      el.textContent = k;
+      kwRow.appendChild(el);
+    });
+  }
 
-if (job.keywords?.addToResume?.length > 0) {
-  const label = document.createElement('div');
-  label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#d97706;margin-top:8px;margin-bottom:4px;';
-  label.textContent = 'Add to Your Resume Before Applying';
-  kwRow.appendChild(label);
-  job.keywords.addToResume.forEach(k => {
-    const el = document.createElement('span');
-    el.className = 'kw';
-    el.style = 'background:rgba(217,119,6,0.1);color:#d97706;';
-    el.textContent = k;
-    kwRow.appendChild(el);
-  });
-}
+  if (job.keywords?.addToResume?.length > 0) {
+    const label = document.createElement('div');
+    label.style = 'width:100%;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-top:8px;margin-bottom:4px;font-family:Space Mono,monospace;';
+    label.textContent = 'Add to Your Resume Before Applying';
+    kwRow.appendChild(label);
+    job.keywords.addToResume.forEach(k => {
+      const el = document.createElement('span');
+      el.className = 'kw';
+      el.style = 'background:rgba(244,162,97,0.1);color:var(--gold);border-color:var(--gold);';
+      el.textContent = k;
+      kwRow.appendChild(el);
+    });
+  }
 
-if (job.keywords?.missing?.length > 0) {
-  const label = document.createElement('div');
-  label.style = 'width:100%;font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#dc2626;margin-top:8px;margin-bottom:4px;';
-  label.textContent = 'Genuine Skill Gaps';
-  kwRow.appendChild(label);
-  job.keywords.missing.forEach(k => {
-    const el = document.createElement('span');
-    el.className = 'kw miss';
-    el.textContent = k;
-    kwRow.appendChild(el);
-  });
-}
+  if (job.keywords?.missing?.length > 0) {
+    const label = document.createElement('div');
+    label.style = 'width:100%;font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-top:8px;margin-bottom:4px;font-family:Space Mono,monospace;';
+    label.textContent = 'Genuine Skill Gaps';
+    kwRow.appendChild(label);
+    job.keywords.missing.forEach(k => {
+      const el = document.createElement('span');
+      el.className = 'kw miss';
+      el.textContent = k;
+      kwRow.appendChild(el);
+    });
+  }
 
   document.getElementById('job-detail').classList.add('open');
   renderJobs();
@@ -1474,31 +1523,27 @@ function closeDetail() {
 function handleStatusChange(value) {
   if (value === 'rejected') {
     const reasons = [
-      'Wrong industry',
-      'Overqualified',
-      'Comp too low',
-      'Location not right',
-      'Not interested in company',
-      'Applied and rejected by them',
-      'Other'
+      'Wrong industry', 'Overqualified', 'Comp too low',
+      'Location not right', 'Not interested in company',
+      'Applied and rejected by them', 'Other'
     ];
 
-    const reasonHTML = reasons.map((r, i) => 
-      `<label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:0.85rem;">
+    const reasonHTML = reasons.map((r) =>
+      `<label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:0.85rem;font-family:'Familjen Grotesk',sans-serif;">
         <input type="checkbox" value="${r}" style="cursor:pointer;"> ${r}
       </label>`
     ).join('');
 
     const modal = document.createElement('div');
     modal.className = 'rejection-modal';
-    modal.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;display:flex;align-items:center;justify-content:center;';
+    modal.style = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(31,26,20,0.6);z-index:1000;display:flex;align-items:center;justify-content:center;';
     modal.innerHTML = `
-      <div style="background:var(--surface);border-radius:12px;padding:1.5rem;width:320px;border:1px solid var(--border);">
-        <div style="font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:1rem;">Why are you rejecting this?</div>
+      <div style="background:var(--surface);border-radius:12px;padding:1.5rem;width:340px;border:3px solid var(--text);box-shadow:6px 6px 0px var(--text);">
+        <div style="font-family:'Caprasimo',cursive;font-size:1rem;color:var(--accent);margin-bottom:1rem;">Why skip this one?</div>
         ${reasonHTML}
         <div style="display:flex;gap:8px;margin-top:1rem;">
-          <button onclick="confirmRejection(this)" style="flex:1;padding:8px;background:var(--red);border:none;border-radius:6px;color:#fff;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;">Confirm</button>
-          <button onclick="cancelRejection(this)" style="flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;">Cancel</button>
+          <button onclick="confirmRejection(this)" style="flex:1;padding:8px;background:var(--red);border:2px solid var(--text);border-radius:6px;color:var(--bg);font-family:'Caprasimo',cursive;font-size:0.85rem;cursor:pointer;box-shadow:var(--shadow-sm);">Confirm</button>
+          <button onclick="cancelRejection(this)" style="flex:1;padding:8px;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Familjen Grotesk',sans-serif;font-weight:700;cursor:pointer;">Cancel</button>
         </div>
       </div>
     `;
@@ -1536,8 +1581,6 @@ function cancelRejection(btn) {
   document.getElementById('d-status').value = jobs.find(j => String(j.id) === String(selectedJobId))?.status || 'new';
   document.body.removeChild(modal);
 }
-
-
 
 async function generateCoverLetter() {
   const job = jobs.find(j => String(j.id) === String(selectedJobId));
@@ -1602,14 +1645,13 @@ CRITICAL RULES:
     const data = await res.json();
     let letter = data.content?.[0]?.text || '';
     letter = letter
-     letter = letter
-    .replace(/^#+\s*/gm, '')
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/\*(.*?)\*/g, '$1')
-    .replace(/^\s*[-–—]\s*/gm, '')
-    .replace(/—/g, ',')
-    .replace(/–/g, ',')
-    .trim();
+      .replace(/^#+\s*/gm, '')
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/^\s*[-–—]\s*/gm, '')
+      .replace(/—/g, ',')
+      .replace(/–/g, ',')
+      .trim();
 
     job.coverLetter = letter;
     document.getElementById('d-cover-letter').value = letter;
@@ -1652,7 +1694,6 @@ function downloadCoverLetter() {
   printWindow.document.write(html);
   printWindow.document.close();
 }
-//---------ASK A QUESTION FIELD FOR THE APPLICATION OR INTERVIEW PREP-------------------
 
 async function askQuestion() {
   const input = document.getElementById('d-qa-input');
@@ -1695,13 +1736,13 @@ Give a definitive, direct answer in 1-12 sentences. Do not hedge or suggest. Sta
     const data = await res.json();
     let answer = data.content?.[0]?.text || 'No response received.';
     answer = answer
-    .replace(/^#+\s*/gm, '')
-    .replace(/\*\*(.*?)\*\*/g, '$1')
-    .replace(/\*(.*?)\*/g, '$1')
-    .replace(/\s*—\s*/g, ', ')
-    .replace(/\s*-\s+/g, ' ')
-    .replace(/^\s*[-–—]\s*/gm, '')
-    .trim();
+      .replace(/^#+\s*/gm, '')
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/\s*—\s*/g, ', ')
+      .replace(/\s*-\s+/g, ' ')
+      .replace(/^\s*[-–—]\s*/gm, '')
+      .trim();
 
     if (!job.qa) job.qa = [];
     job.qa.unshift({ question, answer, date: new Date().toISOString() });
@@ -1723,13 +1764,14 @@ function renderQA(qaList) {
     return;
   }
   container.innerHTML = qaList.map(item => `
-    <div style="background:var(--surface2);border-radius:8px;padding:0.75rem;border-left:3px solid var(--accent);">
-      <div style="font-size:0.72rem;font-weight:700;color:var(--accent);margin-bottom:4px;font-family:'DM Mono',monospace;">${item.question}</div>
-      <div style="font-size:0.82rem;color:var(--text2);line-height:1.6;font-family:'Lora',serif;font-style:italic;">${item.answer}</div>
-      <div style="font-size:0.65rem;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace;">${new Date(item.date).toLocaleDateString('en-US', {month:'short',day:'numeric'})}</div>
+    <div style="background:var(--paper);border-radius:8px;padding:0.75rem;border:2px solid var(--border);border-left:4px solid var(--accent2);box-shadow:var(--shadow-sm);">
+      <div style="font-size:0.7rem;font-weight:700;color:var(--accent2);margin-bottom:4px;font-family:'Space Mono',monospace;">${item.question}</div>
+      <div style="font-size:0.82rem;color:var(--text2);line-height:1.6;font-family:'Familjen Grotesk',sans-serif;font-style:italic;">${item.answer}</div>
+      <div style="font-size:0.62rem;color:var(--text3);margin-top:4px;font-family:'Space Mono',monospace;">${new Date(item.date).toLocaleDateString('en-US', {month:'short',day:'numeric'})}</div>
     </div>
   `).join('');
 }
+
 function updateNotes() {
   const job = jobs.find(j => String(j.id) === String(selectedJobId));
   if (!job) return;
@@ -1766,7 +1808,6 @@ async function deleteJob() {
   renderJobs();
 }
 
-// ── FILTERS ───────────────────────────────────────────────
 function setFilter(f) {
   currentFilter = f;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -1774,7 +1815,6 @@ function setFilter(f) {
   renderJobs();
 }
 
-// ── STATS ─────────────────────────────────────────────────
 function updateStats() {
   const counts = { new: 0, applied: 0, interview: 0, offer: 0, rejected: 0 };
   jobs.forEach(j => { if (counts[j.status] !== undefined) counts[j.status]++; });
@@ -1789,7 +1829,6 @@ function updateStats() {
   document.getElementById('ps-rejected').textContent = counts.rejected;
 }
 
-// ── HELPERS ───────────────────────────────────────────────
 function scoreClass(s) {
   if (s >= 80) return 'score-high';
   if (s >= 65) return 'score-mid';
@@ -1841,19 +1880,14 @@ function addToPipeline() {
 
 function extractTitle(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-  
   const noisePatterns = [
     /^(share|save|apply|connect|follow|message|yes|no|undo|premium|remote|full.time|part.time|contract|temporary)$/i,
     /^show (more|match|all)/i,
     /^(tailor|create|help|use ai|your ai|did you|you'll find|let us|looking for)/i,
     /^(about the job|about us|people you|school alumni|responses managed|promoted by|matches your)/i,
     /\d+\s*(applicant|people|hour|day|week|month|year)/i,
-    /\$[\d,]+/,
-    /·/,
-    /linkedin\.com/i,
-    /http/i,
+    /\$[\d,]+/, /·/, /linkedin\.com/i, /http/i,
   ];
-
   for (const line of lines) {
     if (line.length < 3 || line.length > 80) continue;
     if (noisePatterns.some(p => p.test(line))) continue;
@@ -1867,50 +1901,35 @@ function extractTitle(text) {
 
 function extractCompany(text) {
   const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-  
   const noisePatterns = [
     /^(share|save|apply|connect|follow|message|yes|no|undo|premium|remote|full.time|part.time|contract|temporary)$/i,
     /^show (more|match|all)/i,
     /^(tailor|create|help|use ai|your ai|did you|you'll find|let us|looking for)/i,
     /^(about the job|about us|people you|school alumni|responses managed|promoted by|matches your)/i,
     /\d+\s*(applicant|people|hour|day|week|month|year)/i,
-    /\$[\d,]+/,
-    /·/,
-    /linkedin\.com/i,
-    /http/i,
+    /\$[\d,]+/, /·/, /linkedin\.com/i, /http/i,
   ];
-
-  // Find the title first, then look for the company near it
   const titleIndex = lines.findIndex(line => {
     if (line.length < 3 || line.length > 80) return false;
     if (noisePatterns.some(p => p.test(line))) return false;
     if (/^\d/.test(line)) return false;
     return line.split(' ').length >= 2 && line.split(' ').length <= 8 && /^[A-Z]/.test(line);
   });
-
-  // Look for company in lines before the title
   if (titleIndex > 0) {
     for (let i = titleIndex - 1; i >= 0; i--) {
       const line = lines[i];
       if (line.length < 2 || line.length > 50) continue;
       if (noisePatterns.some(p => p.test(line))) continue;
       if (/^\d/.test(line)) continue;
-      if (/^[A-Z]/.test(line) && line.split(' ').length <= 6) {
-        return line.slice(0, 50);
-      }
+      if (/^[A-Z]/.test(line) && line.split(' ').length <= 6) return line.slice(0, 50);
     }
   }
-
-  // Fallback: find first clean short capitalized line
   for (const line of lines) {
     if (line.length < 2 || line.length > 50) continue;
     if (noisePatterns.some(p => p.test(line))) continue;
     if (/^\d/.test(line)) continue;
-    if (/^[A-Z]/.test(line) && line.split(' ').length <= 5) {
-      return line.slice(0, 50);
-    }
+    if (/^[A-Z]/.test(line) && line.split(' ').length <= 5) return line.slice(0, 50);
   }
-
   return 'Unknown Company';
 }
 
@@ -1925,9 +1944,7 @@ function importJobs(event) {
       let added = 0;
 
       imported.forEach(job => {
-        const exists = jobs.some(j =>
-          j.title === job.title && j.company === job.company
-        );
+        const exists = jobs.some(j => j.title === job.title && j.company === job.company);
         if (!exists) {
           jobs.unshift({
             id: job.id || Date.now() + Math.random(),
@@ -1960,7 +1977,6 @@ function importJobs(event) {
   reader.readAsText(file);
 }
 
-// ── STORAGE ───────────────────────────────────────────────
 async function saveJobs() {
   const { error } = await db.from('jobs').upsert(
     jobs.map(j => ({
@@ -1978,7 +1994,6 @@ async function saveJobs() {
       added_at: j.addedAt,
       notes: j.notes || '',
       source: j.source || 'manual',
-      source: j.source || 'manual',
       linkedin_url: j.linkedinUrl || '',
       archived: j.archived || false,
       rejection_reason: j.rejectionReason || '',
@@ -1992,46 +2007,45 @@ async function saveJobs() {
   if (error) console.error('Save error:', error);
 }
 
-// ── CONTACTS ──────────────────────────────────────────────
 function renderContacts(job) {
   const container = document.getElementById('d-contacts');
   if (!job.contacts || job.contacts.length === 0) {
-    container.innerHTML = '<div style="font-size:0.78rem;color:var(--text3);padding:4px 0;">No contacts added yet.</div>';
+    container.innerHTML = '<div style="font-size:0.78rem;color:var(--text3);padding:4px 0;font-style:italic;">No contacts added yet.</div>';
     return;
   }
   container.innerHTML = job.contacts.map((c, i) => `
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;">
+    <div style="background:var(--paper);border:2px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;box-shadow:var(--shadow-sm);">
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px;">
-        <div style="font-weight:700;font-size:0.88rem;">${c.name || 'Unnamed Contact'}</div>
-        <button onclick="removeContact(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.8rem;">✕</button>
+        <div style="font-weight:700;font-size:0.88rem;font-family:'Familjen Grotesk',sans-serif;">${c.name || 'Unnamed Contact'}</div>
+        <button onclick="removeContact(${i})" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:0.8rem;font-weight:700;">✕</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
         <div>
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Name</div>
-          <input value="${c.name || ''}" onchange="updateContact(${i},'name',this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Syne',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;font-family:'Space Mono',monospace;">Name</div>
+          <input value="${c.name || ''}" onchange="updateContact(${i},'name',this.value)" style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Familjen Grotesk',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
         </div>
         <div>
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Title</div>
-          <input value="${c.title || ''}" onchange="updateContact(${i},'title',this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Syne',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;font-family:'Space Mono',monospace;">Title</div>
+          <input value="${c.title || ''}" onchange="updateContact(${i},'title',this.value)" style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Familjen Grotesk',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
         </div>
         <div>
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Email</div>
-          <input value="${c.email || ''}" onchange="updateContact(${i},'email',this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);outline:none;">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;font-family:'Space Mono',monospace;">Email</div>
+          <input value="${c.email || ''}" onchange="updateContact(${i},'email',this.value)" style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text);outline:none;">
         </div>
         <div>
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Phone</div>
-          <input value="${c.phone || ''}" onchange="updateContact(${i},'phone',this.value)" style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);outline:none;">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;font-family:'Space Mono',monospace;">Phone</div>
+          <input value="${c.phone || ''}" onchange="updateContact(${i},'phone',this.value)" style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text);outline:none;">
         </div>
         <div style="grid-column:1/-1;">
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">LinkedIn URL</div>
-          <input value="${c.linkedin || ''}" onchange="updateContact(${i},'linkedin',this.value)" placeholder="https://linkedin.com/in/..." style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text);outline:none;">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;font-family:'Space Mono',monospace;">LinkedIn URL</div>
+          <input value="${c.linkedin || ''}" onchange="updateContact(${i},'linkedin',this.value)" placeholder="https://linkedin.com/in/..." style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--text);outline:none;">
         </div>
         <div style="grid-column:1/-1;">
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;">Notes</div>
-          <input value="${c.notes || ''}" onchange="updateContact(${i},'notes',this.value)" placeholder="How you connected, context..." style="width:100%;background:var(--surface);border:1px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Syne',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
+          <div style="font-size:0.62rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:2px;font-family:'Space Mono',monospace;">Notes</div>
+          <input value="${c.notes || ''}" onchange="updateContact(${i},'notes',this.value)" placeholder="How you connected, context..." style="width:100%;background:var(--surface);border:2px solid var(--border2);border-radius:4px;padding:5px 8px;font-family:'Familjen Grotesk',sans-serif;font-size:0.78rem;color:var(--text);outline:none;">
         </div>
       </div>
-      ${c.linkedin ? `<a href="${c.linkedin}" target="_blank" style="display:inline-block;margin-top:8px;font-size:0.72rem;color:var(--accent);text-decoration:none;font-family:'DM Mono',monospace;">View LinkedIn ↗</a>` : ''}
+      ${c.linkedin ? `<a href="${c.linkedin}" target="_blank" style="display:inline-block;margin-top:8px;font-size:0.72rem;color:var(--accent2);text-decoration:none;font-family:'Space Mono',monospace;">View LinkedIn ↗</a>` : ''}
     </div>
   `).join('');
 }
@@ -2060,7 +2074,6 @@ function updateContact(index, field, value) {
   saveJobs();
 }
 
-// ── RESUME UPLOAD ─────────────────────────────────────────
 async function uploadResume(type) {
   const job = jobs.find(j => String(j.id) === String(selectedJobId));
   if (!job) return;
@@ -2105,17 +2118,17 @@ function renderResumeSection(job) {
   const docxEl = document.getElementById('resume-docx-btn');
 
   if (job.resumePdfUrl) {
-    pdfEl.innerHTML = `<a href="${job.resumePdfUrl}" target="_blank" style="color:var(--accent);text-decoration:none;">⬇ Download PDF Resume</a>
-      <button onclick="uploadResume('pdf')" style="margin-left:8px;font-size:0.7rem;background:none;border:none;color:var(--text3);cursor:pointer;text-decoration:underline;">Replace</button>`;
+    pdfEl.innerHTML = `<a href="${job.resumePdfUrl}" target="_blank" style="color:var(--accent2);text-decoration:none;font-family:'Familjen Grotesk',sans-serif;font-size:0.82rem;font-weight:600;">⬇ Download PDF Resume</a>
+      <button onclick="uploadResume('pdf')" style="margin-left:8px;font-size:0.7rem;background:none;border:none;color:var(--text3);cursor:pointer;text-decoration:underline;font-family:'Familjen Grotesk',sans-serif;">Replace</button>`;
   } else {
-    pdfEl.innerHTML = `<button onclick="uploadResume('pdf')" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:6px 12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text2);">⬆ Upload PDF Resume</button>`;
+    pdfEl.innerHTML = `<button onclick="uploadResume('pdf')" style="background:var(--surface2);border:2px solid var(--border2);border-radius:6px;padding:6px 12px;font-family:'Familjen Grotesk',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;color:var(--text2);box-shadow:var(--shadow-sm);">⬆ Upload PDF Resume</button>`;
   }
 
   if (job.resumeDocxUrl) {
-    docxEl.innerHTML = `<a href="${job.resumeDocxUrl}" target="_blank" style="color:var(--accent);text-decoration:none;">⬇ Download Word Resume</a>
-      <button onclick="uploadResume('docx')" style="margin-left:8px;font-size:0.7rem;background:none;border:none;color:var(--text3);cursor:pointer;text-decoration:underline;">Replace</button>`;
+    docxEl.innerHTML = `<a href="${job.resumeDocxUrl}" target="_blank" style="color:var(--accent2);text-decoration:none;font-family:'Familjen Grotesk',sans-serif;font-size:0.82rem;font-weight:600;">⬇ Download Word Resume</a>
+      <button onclick="uploadResume('docx')" style="margin-left:8px;font-size:0.7rem;background:none;border:none;color:var(--text3);cursor:pointer;text-decoration:underline;font-family:'Familjen Grotesk',sans-serif;">Replace</button>`;
   } else {
-    docxEl.innerHTML = `<button onclick="uploadResume('docx')" style="background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:6px 12px;font-family:'Syne',sans-serif;font-size:0.78rem;cursor:pointer;color:var(--text2);">⬆ Upload Word Resume</button>`;
+    docxEl.innerHTML = `<button onclick="uploadResume('docx')" style="background:var(--surface2);border:2px solid var(--border2);border-radius:6px;padding:6px 12px;font-family:'Familjen Grotesk',sans-serif;font-size:0.78rem;font-weight:600;cursor:pointer;color:var(--text2);box-shadow:var(--shadow-sm);">⬆ Upload Word Resume</button>`;
   }
 }
 </script>
