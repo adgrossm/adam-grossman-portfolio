@@ -1,8 +1,8 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
+import Testimonials from "@/components/Testimonials";
 import Projects from "@/components/Projects";
-import InProgress from "@/components/InProgress";
 import Contact from "@/components/Contact";
 
 export default function Home() {
@@ -11,8 +11,8 @@ export default function Home() {
       <Nav />
       <Hero />
       <About />
+      <Testimonials />
       <Projects />
-      <InProgress />
       <Contact />
     </main>
   );

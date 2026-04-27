@@ -13,8 +13,10 @@ const config: Config = {
         mono: ["var(--font-geist-mono)", "monospace"],
       },
       colors: {
-        accent: "#E8FF00", // sharp yellow-green accent
-        "accent-alt": "#FF3B3B", // sharp red for secondary emphasis
+        accent: "#FF1F8F",
+        "accent-cyan": "#00E5FF",
+        "accent-lime": "#C6FF1A",
+        "accent-alt": "#FF3B3B",
       },
       letterSpacing: {
         tightest: "-0.04em",

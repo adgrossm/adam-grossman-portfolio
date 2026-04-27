@@ -16,7 +16,7 @@ export default function About() {
         {/* Label column */}
         <div className="md:col-span-3">
           <FadeIn direction="left">
-            <p className="font-mono text-xs tracking-widest uppercase text-white/30 md:sticky md:top-28">
+            <p className="font-mono text-xs tracking-widest uppercase text-white/50 md:sticky md:top-28">
               About
             </p>
           </FadeIn>
@@ -42,7 +42,7 @@ export default function About() {
           {/* Target roles */}
           <FadeIn delay={300}>
             <div>
-              <p className="font-mono text-xs tracking-widest uppercase text-white/30 mb-5">
+              <p className="font-mono text-xs tracking-widest uppercase text-white/50 mb-5">
                 Target Roles
               </p>
               <div className="flex flex-wrap gap-3">

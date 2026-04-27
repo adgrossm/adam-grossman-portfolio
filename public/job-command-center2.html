@@ -966,6 +966,30 @@
   </select>
 </div>
 
+
+
+<div class="detail-section">
+  <div class="detail-section-label" style="display:flex;justify-content:space-between;align-items:center;">
+    <span>Cover Letter</span>
+    <button onclick="generateCoverLetter()" id="cover-letter-btn" style="padding:4px 10px;background:var(--accent);border:none;border-radius:6px;color:#fff;font-family:'Syne',sans-serif;font-size:0.7rem;font-weight:700;cursor:pointer;">Generate</button>
+  </div>
+  <div id="cover-letter-loading" style="display:none;font-size:0.72rem;color:var(--text3);font-family:'DM Mono',monospace;margin:8px 0;">Generating cover letter...</div>
+  <textarea id="d-cover-letter" class="notes-input" style="height:300px;font-size:0.78rem;line-height:1.7;margin-top:8px;" placeholder="Generate a cover letter or paste your own..." onblur="updateField('coverLetter', this.value)"></textarea>
+  <div style="display:flex;gap:8px;margin-top:8px;">
+    <button onclick="copyCoverLetter()" style="flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;">Copy Text</button>
+    <button onclick="downloadCoverLetter()" style="flex:1;padding:8px;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:600;cursor:pointer;">Download PDF</button>
+  </div>
+</div>
+
+<div class="detail-section">
+  <div class="detail-section-label">Ask About This Role</div>
+  <div style="display:flex;gap:8px;margin-bottom:0.75rem;">
+    <input type="text" id="d-qa-input" placeholder="e.g. What should I emphasize in my cover letter?" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:'DM Mono',monospace;font-size:0.75rem;padding:8px 10px;outline:none;">
+    <button onclick="askQuestion()" style="padding:8px 14px;background:var(--accent);border:none;border-radius:6px;color:#fff;font-family:'Syne',sans-serif;font-size:0.78rem;font-weight:700;cursor:pointer;white-space:nowrap;">Ask</button>
+  </div>
+  <div id="d-qa-history" style="display:flex;flex-direction:column;gap:0.75rem;max-height:300px;overflow-y:auto;"></div>
+</div>
+
   <div class="detail-section">
     <div class="detail-section-label">AI Feedback</div>
     <div class="detail-feedback" id="d-feedback">—</div>
@@ -1019,9 +1043,9 @@
   </div>
 
   <div class="detail-section">
-    <div class="detail-section-label">Job Description</div>
-    <div class="detail-description" id="d-description">—</div>
-  </div>
+  <div class="detail-section-label">Job Description</div>
+  <textarea id="d-description" class="notes-input" style="height:200px;font-size:0.75rem;line-height:1.6;white-space:pre-wrap;" onblur="updateField('listing', this.value)">—</textarea>
+</div>
 
 <script>
 // ── PASSWORD PROTECTION ───────────────────────────────────
@@ -1085,6 +1109,8 @@ window.onload = async function() {
       resumePdfUrl: j.resume_pdf_url || null,
       resumeDocxUrl: j.resume_docx_url || null,
       contacts: j.contacts || [],
+      qa: j.qa || [],
+      coverLetter: j.cover_letter || '',
     }));
   }
 
@@ -1146,12 +1172,7 @@ ${listing.slice(0, 4000)}
 ${resumeContext}
 
 ADAM'S PROFILE:
-- 15+ years experience in Customer Success, ERP/SaaS Implementation, and Project Management
-- Target salary: $110K-$130K minimum. Flag any role that likely cannot meet this.
-- Location: Fort Mill, SC. Needs fully remote or Charlotte metro hybrid only.
-- Strong in: SaaS, ERP (Odoo, Acumatica), Salesforce, Jira, HubSpot, Monday.com, Confluence
-- No experience in: insurance, healthcare clinical, legal, finance/banking, government, pharma
-- Currently unemployed, actively searching
+15+ years experience in Customer Success, ERP/SaaS Implementation, and Project Management. His entire career has been client-facing relationship management. He has owned executive stakeholder relationships, run QBRs, managed 80+ client relationships simultaneously, achieved NPS of 85, and maintained 95% logo retention. He is equally comfortable as a trusted advisor, partner success manager, or implementation lead. Strong in SaaS, ERP (Odoo, Acumatica), Salesforce, Jira, HubSpot, Monday.com, SharePoint, MS Project. Certifications: PSM I, PMP in progress, Atlassian Agile. No experience in insurance, healthcare clinical, legal, finance/banking, or government sectors.
 
 SCORING RULES - apply all of these:
 1. HARD DISQUALIFIERS cap score at 55: required industry experience Adam lacks (insurance, pharma, legal, healthcare clinical), required security clearance, required on-site in non-Charlotte location.
@@ -1367,7 +1388,10 @@ function openDetail(id) {
   document.getElementById('d-resume').textContent = job.resumeUsed + ' Resume';
   renderResumeSection(job);
   renderContacts(job);
-  document.getElementById('d-description').textContent = job.listing?.slice(0, 1500) || 'No description available.';
+  renderQA(job.qa || []);
+  document.getElementById('d-description').value = job.listing || '';
+  document.getElementById('d-cover-letter').value = job.coverLetter || '';
+
 
   const applyLink = document.getElementById('d-apply');
   if (job.applyUrl) {
@@ -1513,6 +1537,199 @@ function cancelRejection(btn) {
   document.body.removeChild(modal);
 }
 
+
+
+async function generateCoverLetter() {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+
+  const key = getKey();
+  if (!key) { alert('Please enter your Anthropic API key first.'); return; }
+
+  const btn = document.getElementById('cover-letter-btn');
+  const loading = document.getElementById('cover-letter-loading');
+  btn.disabled = true;
+  btn.textContent = '...';
+  loading.style.display = 'block';
+
+  const resumeContext = job.resumeUsed === 'CSM' ? RESUMES.csm
+    : job.resumeUsed === 'PM' ? RESUMES.pm
+    : RESUMES.impl;
+
+  const prompt = `You are writing a cover letter for Adam Grossman. Use the Superhuman cover letter style: direct, confident, specific, no fluff, no "I am excited to apply" opener. Lead with what he has done, not what he wants.
+
+CONTACT INFO TO USE AT TOP:
+Adam Grossman
+Fort Mill, SC 29707 | 732-236-7065 | adgrossm@gmail.com | linkedin.com/in/adam-grossman-charlotte
+
+TODAY'S DATE: ${new Date().toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}
+
+JOB TITLE: ${job.title}
+COMPANY: ${job.company}
+
+JOB DESCRIPTION:
+${job.listing?.slice(0, 3000)}
+
+ADAM'S RESUME FOR THIS ROLE:
+${resumeContext}
+
+ADAM'S FULL BACKGROUND:
+15+ years of client-facing relationship management. His entire career has been owning customer relationships, not just delivering tasks. He has managed executive stakeholder relationships, run QBRs, maintained 95% logo retention across 58 clients, achieved NPS of 85, grown portfolio ARR from $1.7M to $2.4M, and delivered $8M+ in program value. He is equally comfortable as a trusted advisor, partner success manager, or implementation lead.
+
+COVER LETTER STRUCTURE TO FOLLOW:
+1. Header: Name, contact info, date, Dear Hiring Manager or Dear Hiring Team
+2. Opening paragraph: One or two strong sentences connecting his most directly relevant experience to what they are hiring for. No generic openers. Lead with what he has done.
+3. Middle paragraph: Two or three specific proof points with numbers tied directly to what this job description asks for.
+4. Closing paragraph: One or two sentences on what draws him to this specific role. End with a simple invitation to talk.
+5. Sincerely, Adam Grossman
+
+CRITICAL RULES:
+- Never use bullet points, dashes, or numbered lists anywhere
+- Never use em dashes for commas
+- Write entirely in flowing prose
+- Be specific to this exact job description
+- Sound like the Superhuman letter: direct, confident, specific
+- Keep it to four short paragraphs maximum
+- Never use phrases like "I am excited to apply" or "I would be a great fit"`;
+
+  try {
+    const res = await fetch('/api/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, apiKey: key })
+    });
+
+    const data = await res.json();
+    let letter = data.content?.[0]?.text || '';
+    letter = letter
+     letter = letter
+    .replace(/^#+\s*/gm, '')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/^\s*[-–—]\s*/gm, '')
+    .replace(/—/g, ',')
+    .replace(/–/g, ',')
+    .trim();
+
+    job.coverLetter = letter;
+    document.getElementById('d-cover-letter').value = letter;
+    await saveJobs();
+
+  } catch(err) {
+    console.error(err);
+    alert('Cover letter generation failed. Try again.');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Generate';
+  loading.style.display = 'none';
+}
+
+function copyCoverLetter() {
+  const text = document.getElementById('d-cover-letter').value;
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('[onclick="copyCoverLetter()"]');
+    if (btn) {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy Text', 2000);
+    }
+  });
+}
+
+function downloadCoverLetter() {
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  const text = document.getElementById('d-cover-letter').value;
+  if (!text) return;
+
+  const printWindow = window.open('', '_blank');
+  const html = '<html><head><title>Cover Letter - ' + (job?.title || 'Position') + '</title>' +
+    '<style>body { font-family: Georgia, serif; font-size: 11pt; line-height: 1.6; margin: 1in; color: #1a1a1a; }' +
+    'pre { white-space: pre-wrap; font-family: Georgia, serif; font-size: 11pt; }</style></head>' +
+    '<body><pre>' + text + '</pre>' +
+    '<script>window.onload = function() { window.print(); }<\/script></body></html>';
+  
+  printWindow.document.write(html);
+  printWindow.document.close();
+}
+//---------ASK A QUESTION FIELD FOR THE APPLICATION OR INTERVIEW PREP-------------------
+
+async function askQuestion() {
+  const input = document.getElementById('d-qa-input');
+  const question = input.value.trim();
+  if (!question) return;
+
+  const job = jobs.find(j => String(j.id) === String(selectedJobId));
+  if (!job) return;
+
+  const key = getKey();
+  if (!key) {
+    alert('Please enter your Anthropic API key first.');
+    return;
+  }
+
+  const btn = document.querySelector('#d-qa-input + button');
+  btn.textContent = '...';
+  btn.disabled = true;
+  input.value = '';
+
+  const prompt = `You are a career coach helping Adam Grossman with his job application.
+
+JOB LISTING:
+${job.listing?.slice(0, 3000) || 'No job description available'}
+
+ADAM'S BACKGROUND:
+15+ years in Customer Success, ERP/SaaS Implementation, and Project Management. Strong in SaaS, ERP (Odoo, Acumatica), Salesforce, Jira, HubSpot, Monday.com. Target salary $110K-$130K.
+
+QUESTION: ${question}
+
+Give a definitive, direct answer in 1-12 sentences. Do not hedge or suggest. State exactly what Adam should do, say, or write. Be specific to this role and his background. Never use bullet points, dashes, or numbered lists. Write in plain prose only.`;
+
+  try {
+    const res = await fetch('/api/score', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, apiKey: key })
+    });
+
+    const data = await res.json();
+    let answer = data.content?.[0]?.text || 'No response received.';
+    answer = answer
+    .replace(/^#+\s*/gm, '')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/\*(.*?)\*/g, '$1')
+    .replace(/\s*—\s*/g, ', ')
+    .replace(/\s*-\s+/g, ' ')
+    .replace(/^\s*[-–—]\s*/gm, '')
+    .trim();
+
+    if (!job.qa) job.qa = [];
+    job.qa.unshift({ question, answer, date: new Date().toISOString() });
+    await saveJobs();
+    renderQA(job.qa);
+
+  } catch(err) {
+    console.error(err);
+  }
+
+  btn.textContent = 'Ask';
+  btn.disabled = false;
+}
+
+function renderQA(qaList) {
+  const container = document.getElementById('d-qa-history');
+  if (!qaList || qaList.length === 0) {
+    container.innerHTML = '';
+    return;
+  }
+  container.innerHTML = qaList.map(item => `
+    <div style="background:var(--surface2);border-radius:8px;padding:0.75rem;border-left:3px solid var(--accent);">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--accent);margin-bottom:4px;font-family:'DM Mono',monospace;">${item.question}</div>
+      <div style="font-size:0.82rem;color:var(--text2);line-height:1.6;font-family:'Lora',serif;font-style:italic;">${item.answer}</div>
+      <div style="font-size:0.65rem;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace;">${new Date(item.date).toLocaleDateString('en-US', {month:'short',day:'numeric'})}</div>
+    </div>
+  `).join('');
+}
 function updateNotes() {
   const job = jobs.find(j => String(j.id) === String(selectedJobId));
   if (!job) return;
@@ -1623,13 +1840,78 @@ function addToPipeline() {
 }
 
 function extractTitle(text) {
-  const lines = text.split('\n').filter(l => l.trim());
-  return lines[0]?.slice(0, 60) || 'Untitled Role';
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  
+  const noisePatterns = [
+    /^(share|save|apply|connect|follow|message|yes|no|undo|premium|remote|full.time|part.time|contract|temporary)$/i,
+    /^show (more|match|all)/i,
+    /^(tailor|create|help|use ai|your ai|did you|you'll find|let us|looking for)/i,
+    /^(about the job|about us|people you|school alumni|responses managed|promoted by|matches your)/i,
+    /\d+\s*(applicant|people|hour|day|week|month|year)/i,
+    /\$[\d,]+/,
+    /·/,
+    /linkedin\.com/i,
+    /http/i,
+  ];
+
+  for (const line of lines) {
+    if (line.length < 3 || line.length > 80) continue;
+    if (noisePatterns.some(p => p.test(line))) continue;
+    if (/^\d/.test(line)) continue;
+    if (line.split(' ').length >= 2 && line.split(' ').length <= 8 && /^[A-Z]/.test(line)) {
+      return line.slice(0, 80);
+    }
+  }
+  return 'Untitled Role';
 }
 
 function extractCompany(text) {
-  const match = text.match(/at\s+([A-Z][^\n,]+)/);
-  return match ? match[1].trim().slice(0, 40) : 'Unknown Company';
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  
+  const noisePatterns = [
+    /^(share|save|apply|connect|follow|message|yes|no|undo|premium|remote|full.time|part.time|contract|temporary)$/i,
+    /^show (more|match|all)/i,
+    /^(tailor|create|help|use ai|your ai|did you|you'll find|let us|looking for)/i,
+    /^(about the job|about us|people you|school alumni|responses managed|promoted by|matches your)/i,
+    /\d+\s*(applicant|people|hour|day|week|month|year)/i,
+    /\$[\d,]+/,
+    /·/,
+    /linkedin\.com/i,
+    /http/i,
+  ];
+
+  // Find the title first, then look for the company near it
+  const titleIndex = lines.findIndex(line => {
+    if (line.length < 3 || line.length > 80) return false;
+    if (noisePatterns.some(p => p.test(line))) return false;
+    if (/^\d/.test(line)) return false;
+    return line.split(' ').length >= 2 && line.split(' ').length <= 8 && /^[A-Z]/.test(line);
+  });
+
+  // Look for company in lines before the title
+  if (titleIndex > 0) {
+    for (let i = titleIndex - 1; i >= 0; i--) {
+      const line = lines[i];
+      if (line.length < 2 || line.length > 50) continue;
+      if (noisePatterns.some(p => p.test(line))) continue;
+      if (/^\d/.test(line)) continue;
+      if (/^[A-Z]/.test(line) && line.split(' ').length <= 6) {
+        return line.slice(0, 50);
+      }
+    }
+  }
+
+  // Fallback: find first clean short capitalized line
+  for (const line of lines) {
+    if (line.length < 2 || line.length > 50) continue;
+    if (noisePatterns.some(p => p.test(line))) continue;
+    if (/^\d/.test(line)) continue;
+    if (/^[A-Z]/.test(line) && line.split(' ').length <= 5) {
+      return line.slice(0, 50);
+    }
+  }
+
+  return 'Unknown Company';
 }
 
 function importJobs(event) {
@@ -1703,6 +1985,8 @@ async function saveJobs() {
       resume_pdf_url: j.resumePdfUrl || null,
       resume_docx_url: j.resumeDocxUrl || null,
       contacts: j.contacts || [],
+      qa: j.qa || [],
+      cover_letter: j.coverLetter || '',
     }))
   );
   if (error) console.error('Save error:', error);

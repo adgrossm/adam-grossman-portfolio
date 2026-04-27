@@ -31,7 +31,7 @@ export default function Contact() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mb-12 md:mb-16">
           <div className="md:col-span-3">
             <FadeIn direction="left">
-              <p className="font-mono text-xs tracking-widest uppercase text-white/30">
+              <p className="font-mono text-xs tracking-widest uppercase text-white/50">
                 Contact
               </p>
             </FadeIn>
@@ -62,7 +62,7 @@ export default function Contact() {
                     }
                     className="flex items-center justify-between py-5 sm:py-6 group"
                   >
-                    <span className="font-mono text-xs tracking-widest uppercase text-white/30 group-hover:text-white/60 transition-colors">
+                    <span className="font-mono text-xs tracking-widest uppercase text-white/50 group-hover:text-white/60 transition-colors">
                       {link.label}
                     </span>
                     <span className="text-white text-base sm:text-lg font-medium group-hover:text-accent transition-colors">
