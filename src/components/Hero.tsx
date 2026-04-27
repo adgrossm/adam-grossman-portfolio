@@ -10,11 +10,11 @@ export default function Hero() {
           </p>
         </FadeIn>
         <FadeIn delay={100}>
-  <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black leading-[0.95] tracking-tighter text-white max-w-5xl mb-10">
+  <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black leading-none tracking-tighter text-white max-w-5xl mb-10">
     I started in sales.
-    <br className="hidden sm:block" />
+    <br />
     I moved to implementations.
-    <br className="hidden sm:block" />
+    <br />
     <span className="text-accent">Same skills. Better outcomes.</span>
   </h1>
 </FadeIn>

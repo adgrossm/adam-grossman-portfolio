@@ -1,6 +1,99 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import FadeIn from "./FadeIn";
+
+function HoverVideo({ src, screenshots, accent }: { src: string; screenshots: string[]; accent: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [slideIndex, setSlideIndex] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (!isHovered && screenshots.length > 1) {
+      intervalRef.current = setInterval(() => {
+        setSlideIndex((i) => (i + 1) % screenshots.length);
+      }, 2000);
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isHovered, screenshots.length]);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    if (videoRef.current) videoRef.current.play();
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
+
+  return (
+    <div
+      className="relative w-full overflow-hidden rounded-2xl cursor-pointer"
+      style={{ border: `2px solid ${accent}30` }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <div style={{ aspectRatio: "9/19.5", position: "relative" }}>
+        {screenshots.map((shot, i) => (
+          <img
+            key={i}
+            src={shot}
+            alt={`Screenshot ${i + 1}`}
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+            style={{ opacity: !isHovered && i === slideIndex ? 1 : 0 }}
+          />
+        ))}
+        <video
+          ref={videoRef}
+          src={src}
+          muted
+          loop
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+          style={{ opacity: isHovered ? 1 : 0 }}
+        />
+        {!isHovered && (
+          <div className="absolute inset-0 flex flex-col items-center justify-end pb-4 pointer-events-none">
+            <div className="flex gap-1 mb-2">
+              {screenshots.map((_, i) => (
+                <div
+                  key={i}
+                  className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                  style={{ backgroundColor: i === slideIndex ? accent : accent + "40" }}
+                />
+              ))}
+            </div>
+            <div
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase"
+              style={{ background: "rgba(0,0,0,0.6)", color: accent, border: `1px solid ${accent}40` }}
+            >
+              <svg width="8" height="8" viewBox="0 0 14 14" fill={accent}><polygon points="3,1 13,7 3,13" /></svg>
+              Hover to play
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const jcc = {
+  name: "Job Command Center",
+  tagline: "AI-powered job search pipeline",
+  status: "Live",
+  description:
+    "A full-stack job search command center I built to manage my own job hunt. Paste a listing, get an AI match score against three tailored resumes, and track every application through a Kanban pipeline. Includes AI cover letter generation, a Q&A engine for interview prep, contact tracking, and Supabase persistence. Password protected and in daily use.",
+  stack: ["Next.js", "Supabase", "Anthropic API", "Vanilla JS", "PostgreSQL"],
+  link: "/job-command-center2.html",
+  video: "/video_score_import.mp4",
+};
 
 const ibis = {
   name: "Ibis Men's Golf App",
@@ -31,11 +124,8 @@ const kraveApps = [
       "Can't decide where to eat? Krave decides for you. Pick a cuisine, set a radius, and let the spin mechanic find your next meal. Built with Google Places API, live location, and Supabase session logging.",
     stack: ["React Native", "Expo", "TypeScript", "Google Places API", "Supabase"],
     github: "https://github.com/adgrossm/Krave",
-    screenshots: [
-  "/krave/krave-home.PNG",
-  "/krave/krave-result1.PNG",
-  "/krave/krave-result2.PNG",
-],
+    video: "/Krave.mp4",
+    screenshots: ["/krave/krave-home.PNG", "/krave/krave-result1.PNG", "/krave/krave-result2.PNG"],
   },
   {
     name: "Krave Out",
@@ -46,12 +136,8 @@ const kraveApps = [
       "Same philosophy as Krave, pointed at nightlife. Pick a vibe — dive bar, rooftop, cocktail bar, club — and let it decide. Includes a Get Me Out of Here escape button for when you need to go somewhere, anywhere, right now.",
     stack: ["React Native", "Expo", "TypeScript", "Google Places API", "Supabase"],
     github: "https://github.com/adgrossm/KraveOut",
-    screenshots: [
-  "/kraveout/kraveout-home.PNG",
-  "/kraveout/kraveout-home2.PNG",
-  "/kraveout/kraveout-result1.PNG",
-  "/kraveout/kraveout-result2.PNG",
-],
+    video: "/KraveOut.mp4",
+    screenshots: ["/kraveout/kraveout-home.PNG", "/kraveout/kraveout-home2.PNG", "/kraveout/kraveout-result1.PNG", "/kraveout/kraveout-result2.PNG"],
   },
   {
     name: "Krave Pour",
@@ -62,14 +148,8 @@ const kraveApps = [
       "What are you drinking tonight? Pick a vibe and a spirit, and Krave Pour spins up a drink recommendation pulled from a full cocktail database. Complete with ingredients and instructions.",
     stack: ["React Native", "Expo", "TypeScript", "TheCocktailDB API", "Supabase"],
     github: "https://github.com/adgrossm/KravePour",
-    screenshots: [
-  "/kravepour/kravepour-home1.PNG",
-  "/kravepour/kravepour-home2.PNG",
-  "/kravepour/kravepour-home3.PNG",
-  "/kravepour/kravepour-result1.PNG",
-  "/kravepour/kravepour-result2.PNG",
-  "/kravepour/kravepour-result3.PNG",
-],
+    video: "/KravePour.mp4",
+    screenshots: ["/kravepour/kravepour-home1.PNG", "/kravepour/kravepour-home2.PNG", "/kravepour/kravepour-result1.PNG", "/kravepour/kravepour-result2.PNG"],
   },
 ];
 
@@ -107,48 +187,6 @@ function IbisCarousel({ screenshots }: { screenshots: string[] }) {
   );
 }
 
-function ScreenshotCarousel({ screenshots, accent }: { screenshots: string[], accent: string }) {
-  const [index, setIndex] = useState(0);
-  return (
-    <div className="w-full flex flex-col items-center gap-2">
-      <div className="relative w-full flex items-center justify-center">
-        <button
-          onClick={() => setIndex((i) => (i - 1 + screenshots.length) % screenshots.length)}
-          className="absolute left-0 z-10 p-1 text-white/40 hover:text-white transition-colors"
-        >
-          ‹
-        </button>
-        <div className="relative mx-8" style={{ width: "160px" }}>
-          <div className="rounded-[28px] border-2 overflow-hidden bg-black shadow-xl" style={{ borderColor: accent + '40' }}>
-            <img
-              src={screenshots[index]}
-              alt={`Screenshot ${index + 1}`}
-              className="w-full block"
-              style={{ aspectRatio: "9/19.5", objectFit: "cover" }}
-            />
-          </div>
-        </div>
-        <button
-          onClick={() => setIndex((i) => (i + 1) % screenshots.length)}
-          className="absolute right-0 z-10 p-1 text-white/40 hover:text-white transition-colors"
-        >
-          ›
-        </button>
-      </div>
-      <div className="flex gap-1">
-        {screenshots.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className="w-1.5 h-1.5 rounded-full transition-colors"
-            style={{ backgroundColor: i === index ? accent : 'rgba(255,255,255,0.2)' }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
 export default function Projects() {
   return (
     <section id="projects" className="px-6 py-20 md:py-28 border-b border-white/10">
@@ -170,40 +208,47 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Ibis */}
+        {/* JCC */}
         <FadeIn delay={100}>
           <div className="border border-white/10 hover:border-white/20 transition-colors mb-20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
-              <div className="bg-[#06060C] aspect-video overflow-hidden">
-                <IbisCarousel screenshots={ibis.screenshots} />
+              <div className="bg-[#06060C] aspect-video overflow-hidden flex items-center justify-center">
+                <video
+                  src={jcc.video}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="bg-[#06060C] p-8 sm:p-10 flex flex-col justify-between gap-8">
                 <div>
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
-                      {ibis.name}
+                      {jcc.name}
                     </h3>
                     <span className="font-mono text-[10px] tracking-widest uppercase text-accent mt-1">
-                      {ibis.status}
+                      {jcc.status}
                     </span>
                   </div>
                   <p className="font-mono text-xs text-white/50 tracking-wide uppercase mb-5">
-                    {ibis.tagline}
+                    {jcc.tagline}
                   </p>
                   <p className="text-white/70 text-base leading-relaxed">
-                    {ibis.description}
+                    {jcc.description}
                   </p>
                 </div>
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-wrap gap-2">
-                    {ibis.stack.map((tech) => (
+                    {jcc.stack.map((tech) => (
                       <span key={tech} className="font-mono text-xs tracking-widest uppercase border border-white/20 text-white/50 px-3 py-1">
                         {tech}
                       </span>
                     ))}
                   </div>
-                  <a href={ibis.link} target="_blank" rel="noopener noreferrer" className="font-mono text-xs tracking-widest uppercase text-accent hover:underline self-start">
-                    View Site ↗
+                  <a href={jcc.link} target="_blank" rel="noopener noreferrer" className="font-mono text-xs tracking-widest uppercase text-accent hover:underline self-start">
+                    View Tool ↗
                   </a>
                 </div>
               </div>
@@ -232,15 +277,7 @@ export default function Projects() {
           {kraveApps.map((app, i) => (
             <FadeIn key={app.name} delay={i * 100}>
               <div className="bg-[#06060C] p-6 sm:p-8 flex flex-col gap-6 h-full hover:bg-white/[0.02] transition-colors" style={{ borderTop: `2px solid ${app.accent}20` }}>
-                {app.screenshots ? (
-                  <ScreenshotCarousel screenshots={app.screenshots} accent={app.accent} />
-                ) : (
-                  <div className="w-full aspect-video border flex items-center justify-center" style={{ borderColor: app.accent + '20', backgroundColor: app.accent + '05' }}>
-                    <span className="font-mono text-[10px] text-white/20 tracking-widest uppercase text-center px-2">
-                      Screenshots coming soon
-                    </span>
-                  </div>
-                )}
+                <HoverVideo src={app.video} screenshots={app.screenshots} accent={app.accent} />
 
                 <div className="flex-1 flex flex-col">
                   <div className="flex items-start justify-between mb-2">
@@ -285,6 +322,48 @@ export default function Projects() {
             </div>
           </div>
         </FadeIn>
+
+        {/* Ibis */}
+        <FadeIn delay={100}>
+          <div className="border border-white/10 hover:border-white/20 transition-colors mt-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
+              <div className="bg-[#06060C] aspect-video overflow-hidden">
+                <IbisCarousel screenshots={ibis.screenshots} />
+              </div>
+              <div className="bg-[#06060C] p-8 sm:p-10 flex flex-col justify-between gap-8">
+                <div>
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
+                      {ibis.name}
+                    </h3>
+                    <span className="font-mono text-[10px] tracking-widest uppercase text-accent mt-1">
+                      {ibis.status}
+                    </span>
+                  </div>
+                  <p className="font-mono text-xs text-white/50 tracking-wide uppercase mb-5">
+                    {ibis.tagline}
+                  </p>
+                  <p className="text-white/70 text-base leading-relaxed">
+                    {ibis.description}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-wrap gap-2">
+                    {ibis.stack.map((tech) => (
+                      <span key={tech} className="font-mono text-xs tracking-widest uppercase border border-white/20 text-white/50 px-3 py-1">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <a href={ibis.link} target="_blank" rel="noopener noreferrer" className="font-mono text-xs tracking-widest uppercase text-accent hover:underline self-start">
+                    View Site ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
+
       </div>
     </section>
   );
