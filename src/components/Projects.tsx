@@ -221,8 +221,8 @@ export default function Projects() {
               <span style={{ color: "#00E5FF" }}>moods.</span>{" "}
               <span style={{ color: "#C6FF1A" }}>One database.</span>
             </h3>
-            <p className="text-white/40 text-sm max-w-2xl mt-3 mb-8">
-              A suite of randomizer apps sharing a common Supabase backend. Every spin is logged — laying the groundwork for a Year in Krave Review across all three apps.
+            <p className="text-white/60 text-sm max-w-2xl mt-3 mb-8">
+              A suite of randomizer apps sharing a common Supabase backend. Every spin is logged and every Krave is tracked!
             </p>
           </FadeIn>
         </div>
