@@ -10,26 +10,26 @@ export default function Hero() {
           </p>
         </FadeIn>
         <FadeIn delay={100}>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black leading-[0.95] tracking-tighter text-white max-w-5xl mb-10">
-            I spent 15 years in sales learning why customers{" "}
-            <span className="text-accent">leave.</span>
-            <br className="hidden sm:block" />
-            {" "}The last 5, I have been making sure they{" "}
-            <span className="text-accent">don't.</span>
-          </h1>
-        </FadeIn>
-        <FadeIn delay={200}>
-          <div className="w-16 h-[2px] bg-accent mb-8" />
-        </FadeIn>
-        <FadeIn delay={300}>
-          <p className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed">
-            Adam Grossman. Implementation leader, project manager, and the
-            person who actually shows up.{" "}
-            <span className="text-white/90">
-              Honest, empathetic, and accountable.
-            </span>
-          </p>
-        </FadeIn>
+  <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black leading-[0.95] tracking-tighter text-white max-w-5xl mb-10">
+    I started in sales.
+    <br className="hidden sm:block" />
+    I moved to implementations.
+    <br className="hidden sm:block" />
+    <span className="text-accent">Same skills. Better outcomes.</span>
+  </h1>
+</FadeIn>
+<FadeIn delay={200}>
+  <div className="w-16 h-[2px] bg-accent mb-8" />
+</FadeIn>
+<FadeIn delay={300}>
+  <p className="text-base sm:text-lg md:text-xl text-white/60 max-w-2xl leading-relaxed">
+    Adam Grossman. Implementation leader, project manager, and the
+    person who actually shows up.{" "}
+    <span className="text-white/90">
+      Honest, empathetic, and accountable.
+    </span>
+  </p>
+</FadeIn>
         <FadeIn delay={400}>
           <div className="flex flex-wrap gap-4 mt-12">
             <a
