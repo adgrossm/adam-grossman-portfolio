@@ -456,7 +456,7 @@
     overflow-y: auto;
     padding: 1.25rem;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 1rem;
     align-items: start;
   }
@@ -881,6 +881,7 @@
     <div class="stat-pill">🟢 <strong id="stat-new">0</strong> new</div>
     <div class="stat-pill">📤 <strong id="stat-applied">0</strong> applied</div>
     <div class="stat-pill">🎯 <strong id="stat-interview">0</strong> interviews</div>
+    <div class="stat-pill">👁 <strong id="stat-viewed">0</strong> viewed</div>
   </div>
 </header>
 
@@ -947,6 +948,10 @@
         <div class="pipeline-stat">
           <div class="pipeline-stat-num" style="color:var(--accent)" id="ps-interview">0</div>
           <div class="pipeline-stat-label">Interview</div>
+        </div>
+        <div class="pipeline-stat">
+          <div class="pipeline-stat-num" style="color:#9B59B6" id="ps-viewed">0</div>
+          <div class="pipeline-stat-label">Viewed</div>
         </div>
         <div class="pipeline-stat">
           <div class="pipeline-stat-num score-low" id="ps-rejected">0</div>
@@ -1054,6 +1059,7 @@
     <select class="status-select" id="d-status" onchange="handleStatusChange(this.value)">
       <option value="new">🟢 New</option>
       <option value="applied">📤 Applied</option>
+      <option value="viewed">👁 Viewed / Downloaded</option>
       <option value="interview">🎯 Interview</option>
       <option value="offer">🏆 Offer</option>
       <option value="rejected">❌ Rejected</option>
@@ -1342,6 +1348,7 @@ function renderJobs() {
 
   const newJobs = jobs.filter(j => j.status === 'new');
   const appliedJobs = jobs.filter(j => j.status === 'applied');
+  const viewedJobs = jobs.filter(j => j.status === 'viewed');
   const interviewJobs = jobs.filter(j => j.status === 'interview' || j.status === 'offer');
 
   document.getElementById('job-count').textContent = jobs.length + ' role' + (jobs.length !== 1 ? 's' : '');
@@ -1381,6 +1388,14 @@ function renderJobs() {
         <span class="kanban-count">${appliedJobs.length}</span>
       </div>
       ${appliedJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;font-style:italic;">Nothing applied yet</div>' : appliedJobs.map(renderCard).join('')}
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-header" style="border-color:#9B59B6;">
+        <span>👁 Viewed</span>
+        <span class="kanban-count" style="background:#9B59B6;color:var(--bg);">${viewedJobs.length}</span>
+      </div>
+      ${viewedJobs.length === 0 ? '<div style="font-size:0.78rem;color:var(--text3);padding:1rem 0;text-align:center;font-style:italic;">None yet</div>' : viewedJobs.map(renderCard).join('')}
     </div>
 
     <div class="kanban-column">
@@ -1816,16 +1831,18 @@ function setFilter(f) {
 }
 
 function updateStats() {
-  const counts = { new: 0, applied: 0, interview: 0, offer: 0, rejected: 0 };
+  const counts = { new: 0, applied: 0, viewed: 0, interview: 0, offer: 0, rejected: 0 };
   jobs.forEach(j => { if (counts[j.status] !== undefined) counts[j.status]++; });
 
   document.getElementById('stat-total').textContent = jobs.length;
   document.getElementById('stat-new').textContent = counts.new;
   document.getElementById('stat-applied').textContent = counts.applied;
   document.getElementById('stat-interview').textContent = counts.interview;
+  document.getElementById('stat-viewed').textContent = counts.viewed;
   document.getElementById('ps-new').textContent = counts.new;
   document.getElementById('ps-applied').textContent = counts.applied;
   document.getElementById('ps-interview').textContent = counts.interview;
+  document.getElementById('ps-viewed').textContent = counts.viewed;
   document.getElementById('ps-rejected').textContent = counts.rejected;
 }
 
