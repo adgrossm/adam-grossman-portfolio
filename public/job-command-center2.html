@@ -933,30 +933,50 @@
       <div id="import-status"></div>
     </div>
 
-    <!-- Pipeline Stats -->
+    <!-- Outreach Templates -->
     <div class="panel-section">
-      <div class="panel-label">Pipeline</div>
-      <div class="pipeline-grid">
-        <div class="pipeline-stat">
-          <div class="pipeline-stat-num score-high" id="ps-new">0</div>
-          <div class="pipeline-stat-label">New</div>
+      <div class="panel-label">Outreach Templates</div>
+
+      <div style="display:flex;flex-direction:column;gap:0.75rem;">
+
+        <!-- LinkedIn Initial Outreach -->
+        <div style="background:var(--surface);border:2px solid var(--border2);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-sm);">
+          <div style="padding:0.6rem 0.75rem;background:var(--paper);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-family:'Caprasimo',cursive;font-size:0.78rem;color:var(--accent);">LinkedIn Outreach</div>
+            <button onclick="copyTemplate('tpl-linkedin')" style="font-size:0.62rem;font-family:'Space Mono',monospace;font-weight:700;background:var(--accent);border:1px solid var(--text);border-radius:4px;padding:3px 8px;cursor:pointer;color:var(--bg);box-shadow:var(--shadow-sm);" id="btn-tpl-linkedin">Copy</button>
+          </div>
+          <div id="tpl-linkedin" style="padding:0.75rem;font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--text2);line-height:1.7;white-space:pre-wrap;">Hi [Name],
+
+I just applied for the [Job Title] role and wanted to reach out directly. I have spent 15 years in [CSM / implementation / PM] work and what caught my attention about [Company] was [one specific thing].
+
+Happy to share more about my background if helpful.
+</div>
         </div>
-        <div class="pipeline-stat">
-          <div class="pipeline-stat-num" style="color:var(--gold)" id="ps-applied">0</div>
-          <div class="pipeline-stat-label">Applied</div>
+
+        <!-- Follow Up -->
+        <div style="background:var(--surface);border:2px solid var(--border2);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-sm);">
+          <div style="padding:0.6rem 0.75rem;background:var(--paper);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-family:'Caprasimo',cursive;font-size:0.78rem;color:var(--accent2);">Follow Up</div>
+            <button onclick="copyTemplate('tpl-followup')" style="font-size:0.62rem;font-family:'Space Mono',monospace;font-weight:700;background:var(--accent2);border:1px solid var(--text);border-radius:4px;padding:3px 8px;cursor:pointer;color:var(--bg);box-shadow:var(--shadow-sm);" id="btn-tpl-followup">Copy</button>
+          </div>
+          <div id="tpl-followup" style="padding:0.75rem;font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--text2);line-height:1.7;white-space:pre-wrap;">Hi [Name],
+
+I applied for the [Job Title] role about a week ago and wanted to follow up. I am still very interested and happy to answer any questions about my background.
+</div>
         </div>
-        <div class="pipeline-stat">
-          <div class="pipeline-stat-num" style="color:var(--accent)" id="ps-interview">0</div>
-          <div class="pipeline-stat-label">Interview</div>
+
+        <!-- Thank You -->
+        <div style="background:var(--surface);border:2px solid var(--border2);border-radius:8px;overflow:hidden;box-shadow:var(--shadow-sm);">
+          <div style="padding:0.6rem 0.75rem;background:var(--paper);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-family:'Caprasimo',cursive;font-size:0.78rem;color:var(--gold);">Thank You</div>
+            <button onclick="copyTemplate('tpl-thankyou')" style="font-size:0.62rem;font-family:'Space Mono',monospace;font-weight:700;background:var(--gold);border:1px solid var(--text);border-radius:4px;padding:3px 8px;cursor:pointer;color:var(--bg);box-shadow:var(--shadow-sm);" id="btn-tpl-thankyou">Copy</button>
+          </div>
+          <div id="tpl-thankyou" style="padding:0.75rem;font-family:'Space Mono',monospace;font-size:0.68rem;color:var(--text2);line-height:1.7;white-space:pre-wrap;">Hi [Name],
+
+Thank you for taking the time to speak with me today. I appreciated learning more about [specific thing from interview]. I am excited about the opportunity and look forward to next steps.
+</div>
         </div>
-        <div class="pipeline-stat">
-          <div class="pipeline-stat-num" style="color:#9B59B6" id="ps-viewed">0</div>
-          <div class="pipeline-stat-label">Viewed</div>
-        </div>
-        <div class="pipeline-stat">
-          <div class="pipeline-stat-num score-low" id="ps-rejected">0</div>
-          <div class="pipeline-stat-label">Rejected</div>
-        </div>
+
       </div>
     </div>
 
@@ -1173,6 +1193,21 @@ window.onload = async function() {
   renderJobs();
   updateStats();
 };
+
+function copyTemplate(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const btnId = 'btn-' + id;
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      const original = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = original, 2000);
+    }
+  });
+}
 
 // ── API KEY ───────────────────────────────────────────────
 function saveKey() {
@@ -1839,11 +1874,6 @@ function updateStats() {
   document.getElementById('stat-applied').textContent = counts.applied;
   document.getElementById('stat-interview').textContent = counts.interview;
   document.getElementById('stat-viewed').textContent = counts.viewed;
-  document.getElementById('ps-new').textContent = counts.new;
-  document.getElementById('ps-applied').textContent = counts.applied;
-  document.getElementById('ps-interview').textContent = counts.interview;
-  document.getElementById('ps-viewed').textContent = counts.viewed;
-  document.getElementById('ps-rejected').textContent = counts.rejected;
 }
 
 function scoreClass(s) {
