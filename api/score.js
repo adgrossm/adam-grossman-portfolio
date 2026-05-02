@@ -7,7 +7,8 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  const { prompt, apiKey } = req.body;
+  const { prompt } = req.body;
+  const apiKey = process.env.ANTHROPIC_API_KEY;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -18,7 +19,7 @@ export default async function handler(req, res) {
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 800,
+      max_tokens: 1500,
       messages: [{ role: 'user', content: prompt }]
     })
   });

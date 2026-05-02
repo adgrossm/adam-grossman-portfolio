@@ -1018,9 +1018,21 @@ Thank you for taking the time to speak with me today. I appreciated learning mor
     </div>
   </div>
 
-  <div style="margin-bottom:0.75rem;">
-    <div class="detail-section-label">LinkedIn URL</div>
-    <input type="text" id="d-linkedin-url" placeholder="Paste LinkedIn job URL here..." style="width:100%;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);" onchange="updateField('linkedinUrl', this.value)">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
+    <div>
+      <div class="detail-section-label">LinkedIn URL</div>
+      <input type="text" id="d-linkedin-url" placeholder="Paste LinkedIn job URL here..." style="width:100%;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);" onchange="updateField('linkedinUrl', this.value)">
+    </div>
+
+    <div id="d-timeline" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
+
+    <div>
+      <div class="detail-section-label">Company Apply URL</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
+        <input type="text" id="d-apply-input" placeholder="Paste direct company apply URL..." style="flex:1;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);" onchange="updateApplyUrl(this.value)">
+        <a class="apply-link" id="d-apply" href="#" target="_blank" style="white-space:nowrap;padding:8px 14px;margin:0;font-size:0.82rem;display:none;">Apply →</a>
+      </div>
+    </div>
   </div>
 
   <div style="margin-bottom:1rem;">
@@ -1075,8 +1087,11 @@ Thank you for taking the time to speak with me today. I appreciated learning mor
   </div>
 
   <div class="detail-section">
-    <div class="detail-section-label">Status</div>
-    <select class="status-select" id="d-status" onchange="handleStatusChange(this.value)">
+    <div class="detail-section-label" style="display:flex;justify-content:space-between;align-items:center;">
+  <span>Status</span>
+  <span id="d-status-dates" style="font-size:0.62rem;color:var(--text3);font-family:'Space Mono',monospace;"></span>
+  </div>
+  <select class="status-select" id="d-status" onchange="handleStatusChange(this.value)">
       <option value="new">🟢 New</option>
       <option value="applied">📤 Applied</option>
       <option value="viewed">👁 Viewed / Downloaded</option>
@@ -1126,7 +1141,7 @@ Thank you for taking the time to speak with me today. I appreciated learning mor
 <script>
 // ── PASSWORD PROTECTION ───────────────────────────────────
 (function() {
-  const PASS = 'jcc2025';
+  const PASS = 'Jcc2025';
   const stored = sessionStorage.getItem('jcc-auth');
   if (stored === PASS) return;
   const entered = prompt('Enter password to access Job Command Center:');
@@ -1134,7 +1149,7 @@ Thank you for taking the time to speak with me today. I appreciated learning mor
     document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:\'Familjen Grotesk\',sans-serif;color:#5C4A2A;background:#FFF4E0;font-size:1.1rem;">Access denied. Order\'s not up for you.</div>';
     throw new Error('Unauthorized');
   }
-  sessionStorage.setItem('jcc-auth', PASS);
+  sessionStorage.setItem('Jcc-auth', PASS);
 })();
 
 // ── STATE ──────────────────────────────────────────────────
@@ -1182,6 +1197,8 @@ window.onload = async function() {
       notes: j.notes,
       source: j.source,
       rejectionReason: j.rejection_reason,
+      appliedAt: j.applied_at || null,
+      statusHistory: j.status_history || {},
       resumePdfUrl: j.resume_pdf_url || null,
       resumeDocxUrl: j.resume_docx_url || null,
       contacts: j.contacts || [],
@@ -1231,6 +1248,7 @@ function selectResume(r) {
   event.target.classList.add('active');
 }
 
+
 // ── SCORE ─────────────────────────────────────────────────
 async function scoreJob() {
   const listing = document.getElementById('job-input').value.trim();
@@ -1255,33 +1273,103 @@ async function scoreJob() {
     : selectedResume === 'PM' ? `Resume: ${RESUMES.pm}`
     : `Resume: ${RESUMES.impl}`;
 
-const prompt = `You are a senior recruiter evaluating job fit for Adam Grossman. Be brutally honest. Most jobs should score between 55-75%. Only exceptional matches score above 80%.
+const prompt = `You are an expert job fit analyst evaluating roles for Adam Grossman, an implementation manager and program manager based in Fort Mill, SC (Charlotte metro). Your job is to score the role, identify the best resume, and give a clear pursue or skip signal. Be brutally honest. Do not inflate scores.
+
+ADAM'S BACKGROUND:
+15+ years in Customer Success, ERP/SaaS Implementation, and Project Management. His entire career has been client-facing. He has owned executive stakeholder relationships, run QBRs, managed approximately 30 active accounts at peak portfolio (58 cumulative across 4.5 years), achieved NPS of 85, maintained 96% logo retention with only 2 churn events, grown portfolio ARR from $1.7M to $2.4M, achieved 108% average annual NRR, and delivered $8M+ in total program value across implementations, upgrades, mobile platform, and recurring services. Led 16 Odoo ERP implementations end-to-end averaging $75K each, plus 20 upgrade engagements averaging $60K each ($1.2M upgrade program value). Coined Supported Version Rate (SVR) as a SaaS metric and trademarked Upgrade as a Service (UaaS), U.S. Trademark Serial No. 99691790. Odoo client base was approximately 50% manufacturing customers (approximately 29 of 58 clients). Additional clients spanned distribution, wholesale trade, professional services, nonprofit, and retail. Manufacturing ERP is a STRENGTH and BOOST signal, never a disqualifier. Built company first implementation SOPs, sprint frameworks, and delivery playbooks from scratch. Reduced average implementation timelines 30% (from 6-7 months down to 4-5 months). Reduced post-go-live issues 20%. 15+ at-risk implementation rescues with 8 converted to active reference customers. 5,000+ documented client interactions over 4.5 years. Approximately 60 direct stakeholder relationships at C-suite level. Directed cross-functional teams of 6-8 specialists per engagement. Coordinated 75+ global Product, Engineering, and Delivery resources. Also served as PM on UCP, a NIST-aligned law enforcement mobile platform. MVP delivered in 3 months with 4 devs plus 1 QA, 2-week Agile sprints in Jira. Deployed to 10 agencies across 6 states (MI, WI, PA, GA, SC, NC), approximately 3,000 active officer licenses, 5,000-6,000 total downloads. Led 20-25 core releases. Won Gold and Silver American Business Awards. Platform alerts contributed to confirmed arrests. Managed Apple and Google app store submissions. Earlier career: grew Google account from $120K to $2M annually (16x growth) over 3 years at Modicum spanning 80+ Google divisions and 100+ stakeholder relationships. Led inaugural Google for India event program (December 2015, attended by CEO Sundar Pichai). Managed enterprise accounts including LG, Sharp, YouTube, IAB. Founded Simply Creative Group 2016-2019 with 100% on-time delivery. Account Manager at Phase 3 Marketing 2019-2020. Strong in Jira (advanced), Confluence, Salesforce, HubSpot, Monday.com, MS Project, SharePoint, Google Workspace, Azure DevOps. Methodologies: Waterfall for ERP, Agile/Scrum for mobile work. AI tools used extensively across SOPs, frameworks, scorecards, and process optimization as a power user. Certifications: PSM I earned (Scrum.org), PMP in progress, LinkedIn Learning Agile Foundations, Lean Six Sigma Yellow Belt modules, Atlassian Agile Project Management certificate, Full Stack Web Development Certificate from UNC Charlotte. No experience in insurance P&C, healthcare clinical, legal, banking/capital markets infrastructure, AEC/construction, aviation operations, government with security clearance, data center hardware, ServiceNow-specific implementation. Can talk technical language but is not a developer. Does not have hands-on experience with developer AI infrastructure (LangChain, RAG, vector DBs, agent frameworks).
+
+TARGET ROLES: Implementation Manager, Delivery Consultant, Program Manager, Engagement Manager, Customer Success Manager, Onboarding Manager, Operations Manager, Enablement Manager (senior level). Title matters less than what the job actually requires day to day.
+
+
+COMPENSATION FLOORS:
+- Remote CSM/Implementation/PM (standard): $110K base or $130K OTE floor
+- Remote Senior/Enterprise level: $120K base or $140K OTE floor
+- Hybrid/onsite Charlotte metro or Dallas TX: $120K base floor
+- Hybrid/onsite outside Charlotte: $125K base floor
+- CSM with variable comp: $130K-$145K OTE target range
+- If posted comp range tops out at or below floor, recommend skip even with strong functional fit
+- If no compensation listed, flag as neutral, do not penalize
+- Anchor to middle of posted range, never the floor
+- Fort Mill SC is Charlotte metro. Dallas TX is also an acceptable hybrid/onsite location. Never penalize Charlotte or Dallas hybrid roles for location.
+
+HARD DISQUALIFIERS (cap score at 50, recommend skip):
+- Role requires specific industry depth Adam lacks: insurance P&C, pharma, legal services, healthcare clinical, AEC/construction, aviation operations, government with security clearance, banking/capital markets infrastructure, data center hardware
+- Role requires security clearance
+- Role is primarily quota-carrying sales with revenue targets as core function
+- Role requires deep technical coding or engineering beyond conversational fluency
+- Role requires SAP, Workday, or ServiceNow-specific implementation depth or certification
+- Role requires hands-on developer AI infrastructure (LangChain, RAG pipelines, vector databases, agentic AI frameworks) as core requirement
+- Compensation clearly and non-negotiably below floor after location adjustment
+- Role requires non-English language fluency
+- Commission-only compensation structure
+- Role is primarily managing a team of ICs (e.g. Manager of Customer Success, Manager of Implementation, Director of CS) where the core function is people management, hiring, coaching, and team performance rather than direct client delivery
+
+SOFT PENALTIES (deduct 10-15 points, do not auto-skip):
+- E-commerce marketing strategy advisor (SMS, email, conversion optimization, abandoned cart, segmentation)
+- Healthcare/telehealth domain navigation (HIPAA, payer/provider/patient terminology)
+- Marketing automation strategy beyond standard CSM motion mechanics
+- Vertical-specific operational consulting requiring industry workflow fluency
+- Developer-as-primary-customer (DevOps tooling, infrastructure platforms where CSM advises engineers)
+
+OVERQUALIFICATION RULE:
+If role targets 3-7 years experience and Adam has 15+, deduct 10-15 points and flag. Overqualified candidates get screened out.
+
+TOOLS AND PLATFORMS:
+Individual tool gaps are not hard disqualifiers. Tools are learnable. Only flag as hard disqualifier if entire technical domain is foreign. Gainsight, Totango, ChurnZero, Planhat, and similar CS platforms are bridgeable. AI productivity tools (ChatGPT, Claude, Notion AI, Copilot) are fine and are demonstrated strengths. Developer AI tools (LangChain, vector DBs, RAG, agent frameworks) are not bridgeable.
+
+BRIDGEABLE GAPS (flag but do not disqualify):
+- People management with direct reports: Adam lacks formal direct report management experience
+- Consulting pedigree gap: roles at firms like Deloitte, Accenture, KPMG represent a soft gap; frame Confianz delivery work as consultant-style client-facing engagement
+- Capex/budget variance framing: Adam's experience is ARR and invoicing based, not capital budget management
+- SharePoint/PowerPoint not explicitly named in skills but used in practice
+- Specific CS platform tools (Gainsight, Totango) not used at Confianz but rapidly learnable
+
+BOOST SIGNALS (push scores higher when these appear together):
+- Client-facing delivery ownership from initiation to closure
+- Software or technical project context with SDLC language
+- Relationship and expectation management as core responsibilities
+- Cross-functional coordination and stakeholder communication
+- Risk management, escalation handling, and post-launch stabilization
+- ERP or SaaS implementation mentions
+- Manufacturing, distribution, wholesale trade, retail, supply chain, or industrial software ERP context (Odoo client base was approximately 50% manufacturing)
+- Mobile app development, testing, distribution, or end-to-end delivery
+- Field service management or mobile field workforce platforms
+- Hardware-software integration delivery relevant to field service and IoT-adjacent platforms
+- Change management and user adoption
+- Agile methodologies, coaching, or impediment removal
+- Creative agency experience combining account management and project management
+- SOW development including time and budget specifications
+- Deliverables spanning graphic design, motion graphics, websites, mobile applications, interactive pieces, presentations, pitch decks, or infographics
+- AI-assisted workflow optimization as a power user
+
+SCORE DISTRIBUTION:
+- 85 to 100: Rare. Drop everything and apply today.
+- 75 to 84: Strong match. Tailor resume and apply.
+- 65 to 74: Reasonable fit with notable gaps. Apply if pipeline is thin and comp clears floor.
+- 55 to 64: Significant issues. Proceed with caution. Skip unless pipeline is critically thin.
+- Below 55: Hard disqualifier or fundamental mismatch. Skip.
+
+LOCKED METRICS (use these exact numbers in any output):
+- $8M+ total program value across 4.5 years at Confianz
+- 16 original ERP implementations averaging $75K each
+- 20 upgrade engagements averaging $60K each ($1.2M upgrade program)
+- Portfolio ARR grew from $1.7M to $2.4M
+- 96% logo retention across
 
 JOB LISTING:
 ${listing.slice(0, 4000)}
 
 ${resumeContext}
 
-ADAM'S PROFILE:
-15+ years experience in Customer Success, ERP/SaaS Implementation, and Project Management. His entire career has been client-facing relationship management. He has owned executive stakeholder relationships, run QBRs, managed 80+ client relationships simultaneously, achieved NPS of 85, and maintained 95% logo retention. He is equally comfortable as a trusted advisor, partner success manager, or implementation lead. Strong in SaaS, ERP (Odoo, Acumatica), Salesforce, Jira, HubSpot, Monday.com, SharePoint, MS Project. Certifications: PSM I, PMP in progress, Atlassian Agile. No experience in insurance, healthcare clinical, legal, finance/banking, or government sectors.
-
-SCORING RULES - apply all of these:
-1. HARD DISQUALIFIERS cap score at 55: required industry experience Adam lacks (insurance, pharma, legal, healthcare clinical), required security clearance, required on-site in non-Charlotte location.
-2. OVERQUALIFICATION penalty: if role requires 3-7 years and Adam has 15+, deduct 10-15 points. Overqualification leads to rejection.
-3. COMPENSATION risk: if company is Seed/Series A under $15M funding, or nonprofit, or government, flag as likely below target comp and deduct 5-10 points.
-4. REMOTE confirmation: if job says hybrid but does not specify Charlotte area, deduct 10 points. If location is ambiguous, deduct 5 points.
-5. KEYWORD INFLATION warning: do not inflate scores because keywords match. A job can have 80% keyword match but still be a 60% fit due to industry, comp, or experience mismatch.
-6. SCORING BENCHMARKS: 85-100 = rare, Adam should drop everything and apply today. 75-84 = strong match, worth tailoring resume and applying. 65-74 = reasonable fit with notable gaps, apply if pipeline is thin. Below 65 = significant issues, skip unless desperate.
-
 Respond ONLY with valid JSON, no other text:
 {
   "score": 72,
-  "bestResume": "CSM",
-  "feedback": "4-5 sentence honest assessment covering: overall fit, any hard disqualifiers, overqualification risk, comp concerns, and remote/location confirmation.",
-  "hardDisqualifiers": ["specific disqualifier"] or [],
-  "strengths": ["specific skill Adam has that matches this role"],
-  "addToResume": ["skill Adam likely has but should add explicitly for this role"],
-  "trueGaps": ["skill this role requires that Adam genuinely lacks"]
+  "bestResume": "PM",
+  "feedback": "4 to 5 sentence honest assessment. Cover overall fit, any hard disqualifiers, overqualification risk, compensation concerns, and location or remote confirmation. Be direct. No filler.",
+  "hardDisqualifiers": [],
+  "strengths": ["specific strength from Adam background that directly matches this role"],
+  "addToResume": ["skill Adam likely has but should make explicit for this role before applying"],
+  "trueGaps": ["skill this role genuinely requires that Adam lacks"]
 }`;
 
   try {
@@ -1292,9 +1380,12 @@ Respond ONLY with valid JSON, no other text:
     });
 
     const data = await res.json();
-    const text = data.content?.[0]?.text || '{}';
-    const clean = text.replace(/```json\n?|```\n?/g, '').trim();
-    const parsed = JSON.parse(clean);
+console.log('Full API response:', JSON.stringify(data));
+const text = data.content?.[0]?.text || '{}';
+console.log('Raw text:', text);
+const jsonMatch = text.match(/\{[\s\S]*\}/);
+const clean = jsonMatch ? jsonMatch[0] : '{}';
+const parsed = JSON.parse(clean);
     currentScoreData = parsed;
 
     const score = parsed.score || 0;
@@ -1403,7 +1494,7 @@ function renderJobs() {
         ${job.source === 'adzuna' ? '<span class="job-tag tag-auto">ADZUNA</span>' : ''}
         ${job.source === 'linkedin' ? '<span class="job-tag" style="background:rgba(42,157,143,0.1);color:var(--accent2);border-color:var(--accent2);">LINKEDIN</span>' : ''}
         ${job.source === 'company' ? '<span class="job-tag" style="background:rgba(31,26,20,0.08);color:var(--text2);border-color:var(--border2);">DIRECT</span>' : ''}
-        <span class="job-date">${formatDate(job.addedAt)}</span>
+        <span class="job-date">${job.appliedAt ? 'Applied: ' + formatDate(job.appliedAt) : formatDate(job.addedAt)}</span>
       </div>
     </div>`;
   }
@@ -1502,6 +1593,35 @@ function openDetail(id) {
 
   document.getElementById('d-apply-input').value = job.applyUrl || '';
   document.getElementById('d-source').value = job.source || 'linkedin';
+  const statusDates = document.getElementById('d-status-dates');
+if (job.statusHistory && Object.keys(job.statusHistory).length > 0) {
+  const entries = Object.entries(job.statusHistory)
+    .map(([status, date]) => `${status}: ${formatDate(date)}`)
+    .join(' · ');
+  statusDates.textContent = entries;
+} else {
+  statusDates.textContent = '';
+}
+
+  const timeline = document.getElementById('d-timeline');
+const timelineItems = [
+  { label: 'Added', date: job.addedAt, color: 'var(--surface2)', border: 'var(--border2)', labelColor: 'var(--text3)', valueColor: 'var(--text2)' },
+  { label: 'Applied', date: job.appliedAt, color: 'rgba(42,157,143,0.1)', border: 'rgba(42,157,143,0.5)', labelColor: 'var(--accent2)', valueColor: 'var(--accent2)' },
+  { label: 'Viewed', date: job.statusHistory?.viewed, color: 'rgba(155,89,182,0.1)', border: 'rgba(155,89,182,0.5)', labelColor: '#9B59B6', valueColor: '#9B59B6' },
+  { label: 'Interview', date: job.statusHistory?.interview, color: 'rgba(244,162,97,0.1)', border: 'rgba(244,162,97,0.5)', labelColor: 'var(--gold)', valueColor: 'var(--gold)' },
+  { label: 'Offer', date: job.statusHistory?.offer, color: 'rgba(230,57,70,0.1)', border: 'rgba(230,57,70,0.5)', labelColor: 'var(--red)', valueColor: 'var(--red)' },
+];
+timeline.innerHTML = timelineItems
+  .filter(item => item.date)
+  .map(item => `
+    <div style="display:flex;align-items:center;gap:6px;background:${item.color};border:2px solid ${item.border};border-radius:20px;padding:4px 12px;">
+      <span style="font-size:0.58rem;text-transform:uppercase;letter-spacing:1px;color:${item.labelColor};font-family:'Space Mono',monospace;font-weight:700;">${item.label}</span>
+      <span style="font-size:0.72rem;color:${item.valueColor};font-weight:700;font-family:'Space Mono',monospace;">${formatDate(item.date)}</span>
+    </div>
+  `).join('');
+if (timeline.innerHTML === '') {
+  timeline.innerHTML = '<span style="color:var(--text3);font-style:italic;font-size:0.72rem;font-family:\'Space Mono\',monospace;">No timeline events yet</span>';
+}
 
   const kwRow = document.getElementById('d-keywords');
   kwRow.innerHTML = '';
@@ -1573,10 +1693,12 @@ function closeDetail() {
 function handleStatusChange(value) {
   if (value === 'rejected') {
     const reasons = [
-      'Wrong industry', 'Overqualified', 'Comp too low',
-      'Location not right', 'Not interested in company',
-      'Applied and rejected by them', 'Other'
-    ];
+  'Wrong industry', 'Overqualified', 'Comp too low',
+  'Location not right', 'Not interested in company',
+  'Applied and rejected by them', 'Duplicate listing',
+  'Position filled', 'Role not what it seemed',
+  'Already applied elsewhere', 'Other'
+];
 
     const reasonHTML = reasons.map((r) =>
       `<label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:0.85rem;font-family:'Familjen Grotesk',sans-serif;">
@@ -1602,11 +1724,14 @@ function handleStatusChange(value) {
   }
 
   const job = jobs.find(j => String(j.id) === String(selectedJobId));
-  if (!job) return;
-  job.status = value;
-  saveJobs();
-  renderJobs();
-  updateStats();
+if (!job) return;
+job.status = value;
+if (!job.statusHistory) job.statusHistory = {};
+job.statusHistory[value] = new Date().toISOString();
+if (value === 'applied') job.appliedAt = new Date().toISOString();
+saveJobs();
+renderJobs();
+updateStats();
 }
 
 function confirmRejection(btn) {
@@ -2044,6 +2169,8 @@ async function saveJobs() {
       linkedin_url: j.linkedinUrl || '',
       archived: j.archived || false,
       rejection_reason: j.rejectionReason || '',
+      applied_at: j.appliedAt || null,
+      status_history: j.statusHistory || {},
       resume_pdf_url: j.resumePdfUrl || null,
       resume_docx_url: j.resumeDocxUrl || null,
       contacts: j.contacts || [],

@@ -89,7 +89,7 @@ const jcc = {
   tagline: "AI-powered job search pipeline",
   status: "Live",
   description:
-    "A full-stack job search command center I built to manage my own job hunt. Paste a listing, get an AI match score against three tailored resumes, and track every application through a Kanban pipeline. Includes AI cover letter generation, a Q&A engine for interview prep, contact tracking, and Supabase persistence. Password protected and in daily use.",
+    "A full-stack job search command center I built to manage my own active job hunt. Paste any job listing to get an AI match score against three tailored resumes, with automated daily scanning of 80+ company career pages across Greenhouse, Lever, and Ashby. New matching roles are scored and pushed directly into a Kanban pipeline without any manual input. Also includes AI cover letter generation, an interview Q&A engine, contact tracking, rejection logging, and Supabase persistence. Password protected and in daily use.",
   stack: ["Next.js", "Supabase", "Anthropic API", "Vanilla JS", "PostgreSQL"],
   link: "/job-command-center2.html",
   video: "/video_score_import.mp4",
