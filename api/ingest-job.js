@@ -1,7 +1,15 @@
+// /api/ingest-job.js
+// Receives scored jobs from scanners and writes to Supabase.
+// Auth: prefers INGEST_SECRET env var; falls back to ANTHROPIC_API_KEY for backward compat
+// during the cutover. Once INGEST_SECRET is set in Vercel and all scanners use jcc-score.js
+// (which prefers INGEST_SECRET), the fallback can be removed.
+
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = 'https://koaainzpslvxnriuiuoa.supabase.co';
+const SUPABASE_URL = process.env.SUPABASE_URL || 'https://koaainzpslvxnriuiuoa.supabase.co';
 const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const INGEST_SECRET = process.env.INGEST_SECRET;
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -11,13 +19,28 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  // Simple auth check — same key used by scan-jobs
+  // Accept either INGEST_SECRET (preferred) or ANTHROPIC_API_KEY (legacy fallback)
   const authHeader = req.headers.authorization;
-  if (authHeader !== `Bearer ${process.env.ANTHROPIC_API_KEY}`) {
+  const validSecrets = [INGEST_SECRET, ANTHROPIC_API_KEY].filter(Boolean);
+  const isAuthorized = validSecrets.some(secret => authHeader === `Bearer ${secret}`);
+
+  if (!isAuthorized) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const { title, company, listing, score, feedback, keywords, resumeUsed, applyUrl, source } = req.body;
+  const {
+    title,
+    company,
+    listing,
+    score,
+    feedback,
+    keywords,
+    resumeUsed,
+    applyUrl,
+    source,
+    location,
+    ats
+  } = req.body;
 
   if (!title || !company || !listing) {
     return res.status(400).json({ error: 'Missing required fields: title, company, listing' });
@@ -25,7 +48,6 @@ export default async function handler(req, res) {
 
   const db = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-  // Duplicate check — skip if same title + company already exists
   const { data: existing } = await db
     .from('jobs')
     .select('id')
@@ -44,7 +66,7 @@ export default async function handler(req, res) {
     id: jobId,
     title,
     company,
-    location: '',
+    location: location || '',
     listing,
     apply_url: applyUrl || '',
     score,
@@ -55,6 +77,7 @@ export default async function handler(req, res) {
     added_at: new Date().toISOString(),
     notes: '',
     source: source || 'auto',
+    ats: ats || null,
     linkedin_url: '',
     archived: false,
     rejection_reason: '',

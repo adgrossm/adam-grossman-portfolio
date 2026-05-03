@@ -1018,13 +1018,13 @@ Thank you for taking the time to speak with me today. I appreciated learning mor
     </div>
   </div>
 
+  <div id="d-timeline" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
+
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;">
     <div>
       <div class="detail-section-label">LinkedIn URL</div>
       <input type="text" id="d-linkedin-url" placeholder="Paste LinkedIn job URL here..." style="width:100%;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);" onchange="updateField('linkedinUrl', this.value)">
     </div>
-
-    <div id="d-timeline" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
 
     <div>
       <div class="detail-section-label">Company Apply URL</div>
@@ -1032,14 +1032,6 @@ Thank you for taking the time to speak with me today. I appreciated learning mor
         <input type="text" id="d-apply-input" placeholder="Paste direct company apply URL..." style="flex:1;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);" onchange="updateApplyUrl(this.value)">
         <a class="apply-link" id="d-apply" href="#" target="_blank" style="white-space:nowrap;padding:8px 14px;margin:0;font-size:0.82rem;display:none;">Apply →</a>
       </div>
-    </div>
-  </div>
-
-  <div style="margin-bottom:1rem;">
-    <div class="detail-section-label">Company Apply URL</div>
-    <div style="display:flex;gap:8px;align-items:center;margin-top:4px;">
-      <input type="text" id="d-apply-input" placeholder="Paste direct company apply URL..." style="flex:1;background:var(--surface2);border:2px solid var(--border2);border-radius:6px;color:var(--text);font-family:'Space Mono',monospace;font-size:0.72rem;padding:8px 10px;outline:none;box-shadow:var(--shadow-sm);" onchange="updateApplyUrl(this.value)">
-      <a class="apply-link" id="d-apply" href="#" target="_blank" style="white-space:nowrap;padding:8px 14px;margin:0;font-size:0.82rem;display:none;">Apply →</a>
     </div>
   </div>
 
@@ -1142,7 +1134,7 @@ Thank you for taking the time to speak with me today. I appreciated learning mor
 // ── PASSWORD PROTECTION ───────────────────────────────────
 (function() {
   const PASS = 'Jcc2025';
-  const stored = sessionStorage.getItem('jcc-auth');
+  const stored = sessionStorage.getItem('Jcc-auth');
   if (stored === PASS) return;
   const entered = prompt('Enter password to access Job Command Center:');
   if (entered !== PASS) {
