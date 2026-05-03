@@ -38,7 +38,7 @@ const ALL_COMPANIES = [
   { name: 'Grafana Labs', slug: 'grafanalabs' },
 ];
 
-const BATCH_SIZE = 5;
+const BATCH_SIZE = 2;
 const ATS = 'greenhouse';
 const SCANNER = 'greenhouse';
 
