@@ -868,7 +868,6 @@
     body { overflow: auto; }
   }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -1144,10 +1143,25 @@ Thank you for taking the time to speak with me today. I appreciated learning mor
   sessionStorage.setItem('Jcc-auth', PASS);
 })();
 
+// ── API HELPER ────────────────────────────────────────────
+async function apiCall(path, options = {}) {
+  const pw = sessionStorage.getItem('Jcc-auth');
+  const res = await fetch(path, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'x-jcc-password': pw,
+      ...(options.headers || {}),
+    },
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`API ${path} failed: ${res.status} ${errText}`);
+  }
+  return res.json();
+}
+
 // ── STATE ──────────────────────────────────────────────────
-const SUPABASE_URL = 'https://koaainzpslvxnriuiuoa.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_biLMaC_FHIyiMl4aaVDZbQ_CvQ6pk3J';
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let jobs = [];
 let selectedResume = 'AUTO';
 let currentFilter = 'all';
@@ -1170,7 +1184,7 @@ window.onload = async function() {
     document.getElementById('key-status').textContent = 'Key loaded from storage';
   }
 
-  const { data, error } = await db.from('jobs').select('*').eq('archived', false).order('added_at', { ascending: false });
+  const { jobs: data } = await apiCall('/api/jobs');
   if (data) {
     jobs = data.map(j => ({
       id: j.id,
@@ -2142,35 +2156,41 @@ function importJobs(event) {
 }
 
 async function saveJobs() {
-  const { error } = await db.from('jobs').upsert(
-    jobs.map(j => ({
-      id: String(j.id),
-      title: j.title,
-      company: j.company,
-      location: j.location || '',
-      listing: j.listing,
-      apply_url: j.applyUrl || '',
-      score: j.score,
-      resume_used: j.resumeUsed,
-      feedback: j.feedback,
-      keywords: j.keywords,
-      status: j.status,
-      added_at: j.addedAt,
-      notes: j.notes || '',
-      source: j.source || 'manual',
-      linkedin_url: j.linkedinUrl || '',
-      archived: j.archived || false,
-      rejection_reason: j.rejectionReason || '',
-      applied_at: j.appliedAt || null,
-      status_history: j.statusHistory || {},
-      resume_pdf_url: j.resumePdfUrl || null,
-      resume_docx_url: j.resumeDocxUrl || null,
-      contacts: j.contacts || [],
-      qa: j.qa || [],
-      cover_letter: j.coverLetter || '',
-    }))
-  );
-  if (error) console.error('Save error:', error);
+  const payload = jobs.map(j => ({
+    id: String(j.id),
+    title: j.title,
+    company: j.company,
+    location: j.location || '',
+    listing: j.listing,
+    apply_url: j.applyUrl || '',
+    score: j.score,
+    resume_used: j.resumeUsed,
+    feedback: j.feedback,
+    keywords: j.keywords,
+    status: j.status,
+    added_at: j.addedAt,
+    notes: j.notes || '',
+    source: j.source || 'manual',
+    linkedin_url: j.linkedinUrl || '',
+    archived: j.archived || false,
+    rejection_reason: j.rejectionReason || '',
+    applied_at: j.appliedAt || null,
+    status_history: j.statusHistory || {},
+    resume_pdf_url: j.resumePdfUrl || null,
+    resume_docx_url: j.resumeDocxUrl || null,
+    contacts: j.contacts || [],
+    qa: j.qa || [],
+    cover_letter: j.coverLetter || '',
+  }));
+
+  try {
+    await apiCall('/api/jobs', {
+      method: 'POST',
+      body: JSON.stringify({ jobs: payload }),
+    });
+  } catch (err) {
+    console.error('Save error:', err);
+  }
 }
 
 function renderContacts(job) {
@@ -2255,26 +2275,33 @@ async function uploadResume(type) {
     const statusEl = document.getElementById(`resume-${type}-status`);
     statusEl.textContent = 'Uploading...';
 
-    const path = `${job.id}/${file.name}`;
-    const { data, error } = await db.storage.from('resumes').upload(path, file, { upsert: true });
+    try {
+      const fileData = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
 
-    if (error) {
-      statusEl.textContent = '✕ Upload failed: ' + error.message;
-      return;
+      const { url } = await apiCall('/api/resume-upload', {
+        method: 'POST',
+        body: JSON.stringify({
+          fileName: file.name,
+          fileData,
+          jobId: job.id,
+          contentType: file.type,
+        }),
+      });
+
+      if (type === 'pdf') job.resumePdfUrl = url;
+      else job.resumeDocxUrl = url;
+
+      await saveJobs();
+      renderResumeSection(job);
+      statusEl.textContent = 'Uploaded';
+    } catch (err) {
+      statusEl.textContent = 'Upload failed: ' + err.message;
     }
-
-    const { data: urlData } = db.storage.from('resumes').getPublicUrl(path);
-    const url = urlData.publicUrl;
-
-    if (type === 'pdf') {
-      job.resumePdfUrl = url;
-    } else {
-      job.resumeDocxUrl = url;
-    }
-
-    await saveJobs();
-    renderResumeSection(job);
-    statusEl.textContent = '✓ Uploaded';
   };
   input.click();
 }
