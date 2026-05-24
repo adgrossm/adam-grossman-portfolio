@@ -1,17 +1,1 @@
-{
-  "_crons_note": "Paused 2026-05-24 -- Adam shifting focus to ScoreFit. To re-enable, rename _crons_paused back to crons and delete the two note fields.",
-  "_crons_paused": [
-    {
-      "path": "/api/scan-greenhouse",
-      "schedule": "0 10 * * *"
-    },
-    {
-      "path": "/api/scan-lever",
-      "schedule": "0 11 * * *"
-    },
-    {
-      "path": "/api/scan-ashby",
-      "schedule": "0 12 * * *"
-    }
-  ]
-}
+{}
