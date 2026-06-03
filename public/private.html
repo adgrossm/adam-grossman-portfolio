@@ -86,6 +86,12 @@
   .btn.ghost{background:transparent;color:var(--ink)}
   .btn.ghost:hover{background:var(--ink);color:var(--paper)}
 
+  #sqft-walls .wall-row{align-items:center;margin-bottom:8px}
+  .wall-n{font-family:"Spline Sans Mono",monospace;font-size:12px;font-weight:500;color:var(--ink-soft);min-width:18px;text-align:center}
+  .wall-rm{flex:0 0 auto;width:34px;align-self:stretch;border:1.5px solid var(--line);border-radius:4px;
+    background:var(--paper-2);color:var(--ink-soft);cursor:pointer;font-size:18px;line-height:1;transition:.15s}
+  .wall-rm:hover{border-color:var(--rust);color:var(--rust)}
+
   .saved-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:34px 0 14px;flex-wrap:wrap}
   .saved-bar h2{font-family:"Fraunces",serif;font-weight:600;font-size:1.4rem}
   .saved-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
@@ -196,11 +202,10 @@
     <div class="tagline"><b>Quick estimate.</b> Best when the repeat is 27 inches or less.</div>
     <div class="card">
       <div class="field">
-        <label>Room perimeter <span class="conv" data-conv="perimeter"></span></label>
-        <div class="ftin" data-base="perimeter">
-          <div class="box"><input type="number" name="perimeter_ft" min="0" step="1" placeholder="0"><span>ft</span></div>
-          <div class="box"><input type="number" name="perimeter_in" min="0" step="0.25" placeholder="0"><span>in</span></div>
-        </div>
+        <label>Wall lengths <span class="conv" id="sqft-perim-conv"></span></label>
+        <div style="font-size:12px;color:var(--ink-soft);margin:-2px 0 10px">Enter each wall. We total them into the room perimeter.</div>
+        <div id="sqft-walls"></div>
+        <button type="button" class="btn ghost" id="sqft-addwall" style="margin-top:8px;font-size:12px;padding:8px 13px;width:auto">+ Add wall</button>
       </div>
       <div class="field">
         <label>Ceiling height <span class="conv" data-conv="height"></span></label>
@@ -343,6 +348,30 @@ function ftin(panel,base){
 }
 const inWord = n => n==null?'' : `= ${r2(n)} in`;
 
+/* ---- Square Foot: wall-by-wall perimeter ---- */
+let wallSeq=0;
+function makeWallRow(idx){
+  if(idx===undefined) idx=wallSeq++; else if(idx>=wallSeq) wallSeq=idx+1;
+  const row=document.createElement('div');
+  row.className='ftin wall-row';
+  row.innerHTML=`<span class="wall-n"></span>`+
+    `<div class="box"><input type="number" class="wall-ft" name="wall${idx}_ft" min="0" step="1" placeholder="0"><span>ft</span></div>`+
+    `<div class="box"><input type="number" class="wall-in" name="wall${idx}_in" min="0" step="0.25" placeholder="0"><span>in</span></div>`+
+    `<button type="button" class="wall-rm" title="Remove wall" aria-label="Remove wall">&times;</button>`;
+  return row;
+}
+function wallRows(){ return $$('#sqft-walls .wall-row'); }
+function renumberWalls(){ wallRows().forEach((r,k)=>{ $('.wall-n',r).textContent=k+1; }); }
+function wallPerimeterInches(){
+  let total=0, any=false;
+  wallRows().forEach(r=>{
+    const f=$('.wall-ft',r), i=$('.wall-in',r);
+    if(f.value===''&&i.value==='') return;
+    any=true; total += (parseFloat(f.value)||0)*12 + (parseFloat(i.value)||0);
+  });
+  return any? total : null;
+}
+
 function readVals(panel){
   const o={};
   ['height','perimeter'].forEach(b=>{ if($(`[name="${b}_ft"]`,panel)) o[b]=ftin(panel,b); });
@@ -350,6 +379,7 @@ function readVals(panel){
     if(i.dataset.preset!==undefined||/_ft$|_in$/.test(i.name)) return;
     o[i.name]= i.type==='checkbox'? i.checked : num(i);
   });
+  if($('#sqft-walls',panel)) o.perimeter = wallPerimeterInches();
   return o;
 }
 
@@ -414,7 +444,8 @@ function compute(method,v){
 }
 
 function renderOut(panel){
-  $$('.conv',panel).forEach(c=>{const b=c.dataset.conv; c.textContent=inWord(ftin(panel,b));});
+  $$('.conv',panel).forEach(c=>{const b=c.dataset.conv; if(!b) return; c.textContent=inWord(ftin(panel,b));});
+  const sp=panel.querySelector('#sqft-perim-conv'); if(sp) sp.textContent=inWord(wallPerimeterInches());
   const out=$('.out',panel); if(!out) return;
   const res=compute(panel.dataset.method, readVals(panel));
   if(!res){ out.innerHTML='<p class="empty">Fill in the measurements above.</p>'; return; }
@@ -452,6 +483,14 @@ function loadJob(i){
   const j=JOBS[i];
   $$('.tab').find(t=>document.getElementById(t.dataset.tab).dataset.method===j.method)?.click();
   const panel=$$('.panel').find(p=>p.dataset.method===j.method);
+  if(panel.id==='sqft'){
+    const cont=$('#sqft-walls'); cont.innerHTML='';
+    const idxs=[...new Set(Object.keys(j.inputs).filter(k=>/^wall\d+_ft$/.test(k))
+      .map(k=>+k.match(/^wall(\d+)_ft$/)[1]))].sort((a,b)=>a-b);
+    if(idxs.length) idxs.forEach(ix=>cont.appendChild(makeWallRow(ix)));
+    else for(let k=0;k<4;k++) cont.appendChild(makeWallRow());
+    renumberWalls();
+  }
   $$('input,select',panel).forEach(inp=>{if(inp.dataset.preset!==undefined)return;
     if(j.inputs[inp.name]!==undefined){ inp.type==='checkbox'? inp.checked=j.inputs[inp.name] : inp.value=j.inputs[inp.name]; }});
   renderOut(panel); window.scrollTo({top:0,behavior:'smooth'});
@@ -480,6 +519,24 @@ $$('[data-preset]').forEach(sel=> sel.addEventListener('change',()=>{
 }));
 $('#adh-yards').addEventListener('input',renderAdhesive);
 $('#save-btn').onclick=saveJob;
+/* Square Foot wall list: 4 default rows, add/remove, live total */
+(function initWalls(){
+  const sqftPanel=$('#sqft'), box=$('#sqft-walls');
+  if(!box) return;
+  for(let k=0;k<4;k++) box.appendChild(makeWallRow());
+  renumberWalls();
+  box.addEventListener('input',()=>renderOut(sqftPanel));
+  box.addEventListener('click',e=>{
+    if(!e.target.closest('.wall-rm')) return;
+    if(wallRows().length<=1) return;
+    e.target.closest('.wall-row').remove();
+    renumberWalls(); renderOut(sqftPanel);
+  });
+  $('#sqft-addwall').addEventListener('click',()=>{
+    box.appendChild(makeWallRow()); renumberWalls(); renderOut(sqftPanel);
+  });
+})();
+
 $$('.panel').forEach(renderOut); renderSaved(); renderAdhesive();
 
 /* password gate */
