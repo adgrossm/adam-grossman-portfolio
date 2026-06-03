@@ -62,6 +62,10 @@
   /* Result */
   .result{background:var(--ink);color:var(--paper);border-radius:5px;padding:22px;box-shadow:0 2px 14px var(--shadow)}
   .result .rt{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;opacity:.65;margin-bottom:14px}
+  .headline{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid rgba(242,236,225,.18)}
+  .headline .hv{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(3rem,11vw,4rem);line-height:.95;color:#f0a07e}
+  .headline .hu{font-size:15px;opacity:.85;margin-left:8px;font-family:"Spline Sans",sans-serif;font-weight:400;color:var(--paper)}
+  .headline .hk{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.7;margin-top:7px}
   .stats{display:flex;flex-wrap:wrap;gap:12px}
   .stat{flex:1;min-width:130px}
   .stat .v{font-family:"Fraunces",serif;font-weight:800;font-size:2.7rem;line-height:1}
@@ -408,6 +412,7 @@ function compute(method,v){
       ['Square feet',`${r2(pf)} × ${r2(hf)} = ${r2(sqft)}`],
       ['Single rolls',`${r2(sqft)} ÷ 22 → ${sr}`],
       ['Bolts',`${sr} ÷ 2 → ${bolts}`]],
+      headline:{value:r2(sqft), unit:'sq ft', label:'Total square footage'},
       final:[['Single rolls',sr,'s/r'],['Bolts',bolts,'double rolls',1]],
       note:'Allows for pattern match and waste. Use when repeat is 27" or less.',
       summary:`${sr} s/r · ${bolts} bolts`};
@@ -450,7 +455,9 @@ function renderOut(panel){
   const res=compute(panel.dataset.method, readVals(panel));
   if(!res){ out.innerHTML='<p class="empty">Fill in the measurements above.</p>'; return; }
   if(res.warn){ out.innerHTML=`<div class="warn">${res.warn}</div>`; return; }
-  let h='<div class="stats">';
+  let h='';
+  if(res.headline){ h+=`<div class="headline"><div class="hv">${res.headline.value}<span class="hu">${res.headline.unit}</span></div><div class="hk">${res.headline.label}</div></div>`; }
+  h+='<div class="stats">';
   res.final.forEach(f=> h+=`<div class="stat${f[3]?' accent':''}"><div class="v">${f[1]}<span class="u">${f[2]}</span></div><div class="k">${f[0]}</div></div>`);
   h+='</div>';
   if(res.note) h+=`<div class="note">${res.note}</div>`;
