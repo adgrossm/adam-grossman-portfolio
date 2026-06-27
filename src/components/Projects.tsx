@@ -92,6 +92,7 @@ const jcc = {
     "A full-stack job search command center, now live to the public at scorefit.app. Paste any job listing to get an AI match score against your tailored resumes, with automated daily scanning of company career pages across Greenhouse, Lever, and Ashby. New matching roles are scored and pushed directly into a Kanban pipeline without any manual input. Also includes AI cover letter generation, an interview Q&A engine, contact tracking, rejection logging, and Supabase persistence. Built for my own job hunt, now a product anyone can use.",
   stack: ["Next.js", "Supabase", "Anthropic API", "PostgreSQL"],
   link: "https://scorefit.app",
+  caseStudy: "/scorefit",
   video: "/video_score_import.mp4",
 };
 
@@ -208,9 +209,12 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* JCC */}
+        {/* ScoreFit — featured */}
         <FadeIn delay={100}>
-          <div className="border border-white/10 hover:border-white/20 transition-colors mb-20">
+          <p className="font-mono text-xs tracking-widest uppercase text-accent mb-3">
+            ★ Featured Project
+          </p>
+          <div className="border border-accent/30 hover:border-accent/50 transition-colors mb-20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
               <div className="bg-[#06060C] aspect-video overflow-hidden flex items-center justify-center">
                 <video
@@ -247,9 +251,14 @@ export default function Projects() {
                       </span>
                     ))}
                   </div>
-                  <a href={jcc.link} target="_blank" rel="noopener noreferrer" className="font-mono text-xs tracking-widest uppercase text-accent hover:underline self-start">
-                    Visit ScoreFit ↗
-                  </a>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                    <a href={jcc.caseStudy} className="font-mono text-xs tracking-widest uppercase text-accent hover:underline self-start">
+                      Read the Case Study →
+                    </a>
+                    <a href={jcc.link} target="_blank" rel="noopener noreferrer" className="font-mono text-xs tracking-widest uppercase text-white/50 hover:text-accent transition-colors self-start">
+                      Visit ScoreFit ↗
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
