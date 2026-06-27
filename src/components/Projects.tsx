@@ -86,11 +86,11 @@ function HoverVideo({ src, screenshots, accent }: { src: string; screenshots: st
 
 const jcc = {
   name: "ScoreFit",
-  tagline: "AI-powered job search command center",
-  status: "Live · Public",
+  tagline: "AI job-search product · built solo by directing AI agents",
+  status: "Live · Beta",
   description:
-    "A full-stack job search command center, now live to the public at scorefit.app. Paste any job listing to get an AI match score against your tailored resumes, with automated daily scanning of company career pages across Greenhouse, Lever, and Ashby. New matching roles are scored and pushed directly into a Kanban pipeline without any manual input. Also includes AI cover letter generation, an interview Q&A engine, contact tracking, rejection logging, and Supabase persistence. Built for my own job hunt, now a product anyone can use.",
-  stack: ["Next.js", "Supabase", "Anthropic API", "PostgreSQL"],
+    "An AI-powered job-search product I built and shipped end to end as a solo founder — operating as the product and architecture layer directing a team of AI coding agents. ScoreFit scores live job listings against your background, recommends which resume version to use, and tracks applications, so employed professionals can run a sharp, low-effort search instead of scrolling endless boards. Live in active beta at scorefit.app.",
+  stack: ["Next.js", "React", "Supabase", "Anthropic API", "Python", "Vercel"],
   link: "https://scorefit.app",
   caseStudy: "/scorefit",
   video: "/video_score_import.mp4",
