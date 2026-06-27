@@ -85,13 +85,13 @@ function HoverVideo({ src, screenshots, accent }: { src: string; screenshots: st
 }
 
 const jcc = {
-  name: "Job Command Center",
-  tagline: "AI-powered job search pipeline",
-  status: "Live",
+  name: "ScoreFit",
+  tagline: "AI-powered job search command center",
+  status: "Live · Public",
   description:
-    "A full-stack job search command center I built to manage my own active job hunt. Paste any job listing to get an AI match score against three tailored resumes, with automated daily scanning of 80+ company career pages across Greenhouse, Lever, and Ashby. New matching roles are scored and pushed directly into a Kanban pipeline without any manual input. Also includes AI cover letter generation, an interview Q&A engine, contact tracking, rejection logging, and Supabase persistence. Password protected and in daily use.",
-  stack: ["Next.js", "Supabase", "Anthropic API", "Vanilla JS", "PostgreSQL"],
-  link: "/job-command-center2.html",
+    "A full-stack job search command center, now live to the public at scorefit.app. Paste any job listing to get an AI match score against your tailored resumes, with automated daily scanning of company career pages across Greenhouse, Lever, and Ashby. New matching roles are scored and pushed directly into a Kanban pipeline without any manual input. Also includes AI cover letter generation, an interview Q&A engine, contact tracking, rejection logging, and Supabase persistence. Built for my own job hunt, now a product anyone can use.",
+  stack: ["Next.js", "Supabase", "Anthropic API", "PostgreSQL"],
+  link: "https://scorefit.app",
   video: "/video_score_import.mp4",
 };
 
@@ -248,7 +248,7 @@ export default function Projects() {
                     ))}
                   </div>
                   <a href={jcc.link} target="_blank" rel="noopener noreferrer" className="font-mono text-xs tracking-widest uppercase text-accent hover:underline self-start">
-                    View Tool ↗
+                    Visit ScoreFit ↗
                   </a>
                 </div>
               </div>
