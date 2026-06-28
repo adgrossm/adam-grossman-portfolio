@@ -94,10 +94,10 @@ const scoreFit = {
   link: "/scorefit-case-study.html",
   liveLink: "https://scorefit.app",
   screenshots: [
-    "/scorefit/scorefit1.png",
-    "/scorefit/scorefit2.png",
-    "/scorefit/scorefit3.png",
-    "/scorefit/scorefit4.png",
+    "/scorefit/sf-pipeline.png",
+    "/scorefit/sf-score-result.png",
+    "/scorefit/sf-email.png",
+    "/scorefit/sf-score-detail.png",
   ],
 };
 

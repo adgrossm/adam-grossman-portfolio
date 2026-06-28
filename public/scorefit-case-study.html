@@ -175,47 +175,45 @@
       background: var(--accent-dim);
     }
 
-    /* SCREENSHOT GRID */
-    .screenshot-grid {
+    /* SCREENSHOT GALLERY */
+    .gallery {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: var(--border);
+    }
+
+    .gallery-hero {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .gallery-hero img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .gallery-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 2px;
       background: var(--border);
-      border: 1px solid var(--border);
-      margin-top: 48px;
     }
 
-    .screenshot-grid img {
+    .gallery-grid img {
       width: 100%;
-      height: 260px;
+      height: 340px;
       object-fit: cover;
       object-position: top;
       display: block;
       background: var(--surface);
     }
 
-    .screenshot-grid img.placeholder {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--surface);
-      height: 260px;
-    }
-
-    .screenshot-placeholder {
-      background: var(--surface);
-      height: 260px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .screenshot-placeholder span {
-      font-family: 'Space Mono', monospace;
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text3);
+    @media (max-width: 640px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-grid img { height: 260px; }
     }
 
     /* PRODUCT DESCRIPTION */
@@ -419,9 +417,6 @@
       .hero { padding: 72px 0 60px; }
       .discipline { grid-template-columns: 36px 1fr; gap: 16px; padding: 24px 20px; }
       .investigation-block { padding: 24px 20px; }
-      .screenshot-grid { grid-template-columns: 1fr; }
-      .screenshot-grid img { height: 220px; }
-      .screenshot-placeholder { height: 220px; }
     }
   </style>
 </head>
@@ -461,11 +456,19 @@
     </div>
 
     <div class="container-wide">
-      <div class="screenshot-grid" id="screenshot-grid">
-        <div class="screenshot-placeholder"><span>Screenshot 1</span></div>
-        <div class="screenshot-placeholder"><span>Screenshot 2</span></div>
-        <div class="screenshot-placeholder"><span>Screenshot 3</span></div>
-        <div class="screenshot-placeholder"><span>Screenshot 4</span></div>
+      <div class="gallery">
+        <div class="gallery-hero">
+          <img src="/scorefit/sf-pipeline.png" alt="ScoreFit pipeline -- 79 active roles scored and organized across pipeline stages" />
+        </div>
+        <div class="gallery-grid">
+          <img src="/scorefit/sf-score-input.png" alt="Score a job -- paste a job description and get a fit score in seconds" />
+          <img src="/scorefit/sf-score-result.png" alt="Scoring result -- fit score, resume recommendation, and capability analysis" />
+          <img src="/scorefit/sf-score-detail.png" alt="Detailed scoring breakdown -- strengths, gaps, and resume guidance" />
+          <img src="/scorefit/sf-job-detail.png" alt="Job detail -- Ask about this role and cover letter generation" />
+        </div>
+        <div class="gallery-hero">
+          <img src="/scorefit/sf-email.png" alt="Daily email digest -- top matches scored and ranked, delivered every morning" />
+        </div>
       </div>
     </div>
   </section>
