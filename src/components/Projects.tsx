@@ -89,7 +89,7 @@ const scoreFit = {
   tagline: "AI job-fit scoring for employed professionals",
   status: "Beta",
   description:
-    "ScoreFit scores live job listings against a candidate's real background, recommends which resume version to use, and tracks the pipeline — built for employed professionals running a sharp, low-effort search instead of scrolling endless boards. I built and shipped it end to end as a solo founder by operating as the product and architecture layer directing AI coding agents in parallel. The interesting part is not that AI wrote code. It is the discipline required to make that produce something trustworthy: knowing what to delegate, how to verify it, and when a confident answer is quietly wrong.",
+    "ScoreFit scores live job listings against a candidate's real background, recommends which resume version to use, and tracks the pipeline. Built for employed professionals running a sharp, low-effort search instead of scrolling endless boards. I built and shipped it end to end as a solo founder by operating as the product and architecture layer directing AI coding agents in parallel. The interesting part is not that AI wrote code. It is the discipline required to make that produce something trustworthy: knowing what to delegate, how to verify it, and when a confident answer is quietly wrong.",
   stack: ["Next.js", "Supabase", "Anthropic API", "Python", "PostgreSQL"],
   link: "/scorefit-case-study.html",
   liveLink: "https://scorefit.app",
