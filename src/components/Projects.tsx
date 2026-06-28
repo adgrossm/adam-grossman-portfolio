@@ -84,6 +84,23 @@ function HoverVideo({ src, screenshots, accent }: { src: string; screenshots: st
   );
 }
 
+const scoreFit = {
+  name: "ScoreFit",
+  tagline: "AI job-fit scoring for employed professionals",
+  status: "Beta",
+  description:
+    "ScoreFit scores live job listings against a candidate's real background, recommends which resume version to use, and tracks the pipeline — built for employed professionals running a sharp, low-effort search instead of scrolling endless boards. I built and shipped it end to end as a solo founder by operating as the product and architecture layer directing AI coding agents in parallel. The interesting part is not that AI wrote code. It is the discipline required to make that produce something trustworthy: knowing what to delegate, how to verify it, and when a confident answer is quietly wrong.",
+  stack: ["Next.js", "Supabase", "Anthropic API", "Python", "PostgreSQL"],
+  link: "/scorefit-case-study.html",
+  liveLink: "https://scorefit.app",
+  screenshots: [
+    "/scorefit/scorefit1.png",
+    "/scorefit/scorefit2.png",
+    "/scorefit/scorefit3.png",
+    "/scorefit/scorefit4.png",
+  ],
+};
+
 const jcc = {
   name: "Job Command Center",
   tagline: "AI-powered job search pipeline",
@@ -207,6 +224,52 @@ export default function Projects() {
             </FadeIn>
           </div>
         </div>
+
+        {/* ScoreFit */}
+        <FadeIn delay={100}>
+          <div className="border border-white/10 hover:border-white/20 transition-colors mb-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
+              <div className="bg-[#06060C] aspect-video overflow-hidden">
+                <IbisCarousel screenshots={scoreFit.screenshots} />
+              </div>
+              <div className="bg-[#06060C] p-8 sm:p-10 flex flex-col justify-between gap-8">
+                <div>
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-2xl sm:text-3xl font-black tracking-tighter text-white">
+                      {scoreFit.name}
+                    </h3>
+                    <span className="font-mono text-[10px] tracking-widest uppercase mt-1" style={{ color: "#4F8EF7" }}>
+                      {scoreFit.status}
+                    </span>
+                  </div>
+                  <p className="font-mono text-xs text-white/50 tracking-wide uppercase mb-5">
+                    {scoreFit.tagline}
+                  </p>
+                  <p className="text-white/70 text-base leading-relaxed">
+                    {scoreFit.description}
+                  </p>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-wrap gap-2">
+                    {scoreFit.stack.map((tech) => (
+                      <span key={tech} className="font-mono text-xs tracking-widest uppercase border border-white/20 text-white/50 px-3 py-1">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="flex gap-6">
+                    <a href={scoreFit.link} className="font-mono text-xs tracking-widest uppercase hover:underline self-start" style={{ color: "#4F8EF7" }}>
+                      Case Study ↗
+                    </a>
+                    <a href={scoreFit.liveLink} target="_blank" rel="noopener noreferrer" className="font-mono text-xs tracking-widest uppercase text-white/40 hover:text-white/70 hover:underline self-start transition-colors">
+                      Live Site ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </FadeIn>
 
         {/* JCC */}
         <FadeIn delay={100}>

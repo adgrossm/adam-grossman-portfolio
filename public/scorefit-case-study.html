@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ScoreFit — Case Study | Adam Grossman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #06060C;
+      --surface: #0E0E1A;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --text: #ffffff;
+      --text2: rgba(255,255,255,0.70);
+      --text3: rgba(255,255,255,0.40);
+      --accent: #4F8EF7;
+      --accent-dim: rgba(79,142,247,0.12);
+      --accent-border: rgba(79,142,247,0.30);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text2);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6,6,12,0.90);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    nav a {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    nav .live-link {
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      padding: 6px 14px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    nav .live-link:hover { background: var(--accent-dim); color: var(--accent); }
+
+    /* LAYOUT */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .container-wide {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section { padding: 80px 0; border-bottom: 1px solid var(--border); }
+    section:last-child { border-bottom: none; }
+
+    /* LABELS */
+    .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    /* TYPE */
+    h1 {
+      font-size: clamp(48px, 8vw, 80px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    p { margin-bottom: 18px; }
+    p:last-child { margin-bottom: 0; }
+
+    /* HERO */
+    .hero {
+      padding: 100px 0 80px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero .tagline {
+      font-family: 'Space Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 48px;
+    }
+
+    .hero .one-liner {
+      font-size: clamp(18px, 2.5vw, 22px);
+      color: var(--text);
+      font-weight: 500;
+      line-height: 1.5;
+      max-width: 680px;
+      margin-bottom: 48px;
+    }
+
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      border: 1px solid var(--border-strong);
+      padding: 7px 14px;
+      border-radius: 4px;
+    }
+
+    .pill.accent {
+      color: var(--accent);
+      border-color: var(--accent-border);
+      background: var(--accent-dim);
+    }
+
+    /* SCREENSHOT GRID */
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 48px;
+    }
+
+    .screenshot-grid img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      object-position: top;
+      display: block;
+      background: var(--surface);
+    }
+
+    .screenshot-grid img.placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface);
+      height: 260px;
+    }
+
+    .screenshot-placeholder {
+      background: var(--surface);
+      height: 260px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screenshot-placeholder span {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+
+    /* PRODUCT DESCRIPTION */
+    .product-intro {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--text2);
+      max-width: 660px;
+    }
+
+    /* DISCIPLINES */
+    .disciplines {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: var(--border);
+      margin-top: 40px;
+    }
+
+    .discipline {
+      background: var(--bg);
+      padding: 32px 36px;
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 24px;
+      align-items: start;
+      transition: background 0.2s;
+    }
+
+    .discipline:hover { background: var(--surface); }
+
+    .discipline-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      padding-top: 4px;
+    }
+
+    .discipline h3 { margin-bottom: 6px; }
+
+    .discipline p {
+      font-size: 15px;
+      color: var(--text3);
+      line-height: 1.65;
+      margin-bottom: 0;
+    }
+
+    /* INVESTIGATION */
+    .investigation-block {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-left: 3px solid var(--accent);
+      padding: 36px 40px;
+      margin: 40px 0;
+    }
+
+    .investigation-block .inv-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    .investigation-block p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--text2);
+    }
+
+    /* OUTCOME CALLOUT */
+    .outcome {
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      padding: 28px 32px;
+      margin-top: 32px;
+    }
+
+    .outcome .outcome-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .outcome p {
+      font-size: 15px;
+      color: var(--text);
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+
+    /* PRINCIPLES */
+    .principles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      background: var(--border);
+      margin-top: 40px;
+    }
+
+    .principle {
+      background: var(--bg);
+      padding: 24px 32px;
+      display: flex;
+      gap: 20px;
+      align-items: baseline;
+      transition: background 0.2s;
+    }
+
+    .principle:hover { background: var(--surface); }
+
+    .principle-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    .principle-text {
+      font-size: 15px;
+      color: var(--text2);
+      line-height: 1.65;
+    }
+
+    .principle-text strong {
+      color: var(--text);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    /* STACK */
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 2px;
+      background: var(--border);
+      margin-top: 40px;
+    }
+
+    .stack-item {
+      background: var(--bg);
+      padding: 20px 24px;
+    }
+
+    .stack-item .stack-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 6px;
+    }
+
+    .stack-item .stack-value {
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ARCH NOTE */
+    .arch-note {
+      border: 1px solid var(--border-strong);
+      padding: 24px 28px;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--text3);
+      line-height: 1.7;
+    }
+
+    .arch-note strong { color: var(--text2); font-weight: 600; }
+
+    /* FOOTER */
+    footer {
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    footer a {
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--text); }
+
+    @media (max-width: 640px) {
+      section { padding: 60px 0; }
+      .hero { padding: 72px 0 60px; }
+      .discipline { grid-template-columns: 36px 1fr; gap: 16px; padding: 24px 20px; }
+      .investigation-block { padding: 24px 20px; }
+      .screenshot-grid { grid-template-columns: 1fr; }
+      .screenshot-grid img { height: 220px; }
+      .screenshot-placeholder { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/">← Adam Grossman</a>
+    <a href="https://scorefit.app" target="_blank" rel="noopener noreferrer" class="live-link">scorefit.app ↗</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <span class="label">Case Study</span>
+      <h1>ScoreFit</h1>
+      <p class="tagline">AI Job-Fit Scoring for Employed Professionals</p>
+      <p class="one-liner">I built and shipped a working AI product end to end as a solo founder -- not by writing every line myself, but by operating as the product and architecture layer directing a team of AI coding agents.</p>
+      <div class="meta-pills">
+        <span class="pill">Role: Founder, Product & Architecture</span>
+        <span class="pill">Solo-built B2C SaaS</span>
+        <span class="pill accent">Active Beta</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT IT DOES -->
+  <section>
+    <div class="container">
+      <span class="label">The Product</span>
+      <h2>What it does</h2>
+      <p class="product-intro">
+        Employed professionals don't have time to read hundreds of listings to find the few worth pursuing. Existing tools either spray applications indiscriminately or bury the user in an unfiltered feed.
+      </p>
+      <p class="product-intro">
+        ScoreFit casts a wide net, scores sharply against the individual's real background, and lets the person decide. It recommends which resume version to use, tracks the application pipeline, and surfaces the roles worth pursuing -- without automating the decision itself.
+      </p>
+    </div>
+
+    <div class="container-wide">
+      <div class="screenshot-grid" id="screenshot-grid">
+        <div class="screenshot-placeholder"><span>Screenshot 1</span></div>
+        <div class="screenshot-placeholder"><span>Screenshot 2</span></div>
+        <div class="screenshot-placeholder"><span>Screenshot 3</span></div>
+        <div class="screenshot-placeholder"><span>Screenshot 4</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPERATING MODEL -->
+  <section>
+    <div class="container">
+      <span class="label">How I Worked</span>
+      <h2>The operating model</h2>
+      <p>
+        This is the part most relevant to how I'd operate on a team. I positioned myself as the planning and architecture layer. Day to day, I made the product decisions, defined the architecture, and wrote precise specs -- then delegated implementation to AI coding agents running in parallel, each scoped to a non-overlapping part of the codebase. I reviewed and integrated everything myself.
+      </p>
+      <p>
+        That sounds like a force multiplier, and it is. But it only works with three disciplines I had to build deliberately.
+      </p>
+    </div>
+    <div class="container-wide">
+      <div class="disciplines">
+
+        <div class="discipline">
+          <div class="discipline-num">01</div>
+          <div>
+            <h3>Lock the decision before writing the spec</h3>
+            <p>Agents are eager to build. If I handed off an ambiguous problem, I got a confident, wrong implementation -- fast. So I forced every product and design decision to be settled in plain language before any implementation began. The spec is where the thinking happens. The build is mechanical.</p>
+          </div>
+        </div>
+
+        <div class="discipline">
+          <div class="discipline-num">02</div>
+          <div>
+            <h3>Treat "done" and "verified" as untrustworthy by default</h3>
+            <p>An agent reporting "verified" means only "I checked what I thought to check." Repeatedly, the only reliable signal was live data -- the actual database state, the actual API response, the actual network request -- not the agent's description of it. I built a habit of confirming outcomes against ground truth before believing anything was fixed.</p>
+          </div>
+        </div>
+
+        <div class="discipline">
+          <div class="discipline-num">03</div>
+          <div>
+            <h3>Watch outcomes, not just errors</h3>
+            <p>The most dangerous failures were not crashes. They were processes that completed successfully while silently doing nothing useful. A job that "ran fine" but returned no results is worse than one that errors, because nothing alerts you. I learned to measure what users actually received, not whether the code executed.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- THIN FEED INVESTIGATION -->
+  <section>
+    <div class="container">
+      <span class="label">A Representative Problem</span>
+      <h2>The thin-feed investigation</h2>
+      <p>
+        The clearest example of how this operating model pays off. Several beta testers were getting sparse job feeds despite the product sourcing from an index covering tens of thousands of company career sites. The obvious assumption was a coverage gap -- the data source simply didn't have the roles.
+      </p>
+      <p>
+        Rather than accept that, I ran a structured investigation, splitting it across agents along clean boundaries.
+      </p>
+    </div>
+
+    <div class="container-wide">
+      <div class="investigation-block">
+        <div class="inv-label">Investigation Design</div>
+        <p>One agent traced how the search query was constructed. One traced what happened to results after they came back. One made a live call to see what the source actually returned. Keeping the work disjoint meant the agents could not collide, and each finding was independently verifiable.</p>
+      </div>
+    </div>
+
+    <div class="container">
+      <p style="margin-top: 32px;">
+        The result overturned my own initial theory. A simple external reality-check -- manually searching a major job board for the same titles -- returned over a hundred roles. The source had the inventory. The bug was ours.
+      </p>
+      <p>
+        The matching logic required job titles to appear in an exact, rigid word order. Real-world titles like "Director, Customer Support Systems" or "VP of Client Success" silently failed to match. A controlled test confirmed it: loosening the matching recovered the missing roles cleanly, with no increase in irrelevant results.
+      </p>
+    </div>
+
+    <div class="container-wide">
+      <div class="outcome">
+        <div class="outcome-label">Outcome</div>
+        <p>The fix was a single change to the query logic. It improved feeds across the entire user base at once -- and it dissolved a much larger, more expensive plan I had been considering (integrating a second data source) that would have solved the wrong problem at permanent cost.</p>
+      </div>
+    </div>
+
+    <div class="container" style="margin-top: 40px;">
+      <p style="font-size: 15px; color: var(--text3); font-style: italic; border-left: 2px solid var(--border-strong); padding-left: 20px;">
+        The win was not the code change. It was the discipline to distrust a plausible conclusion, design an investigation that could disprove my own assumption, and let cheap evidence redirect an expensive decision before I committed to it.
+      </p>
+    </div>
+  </section>
+
+  <!-- MEASUREMENT -->
+  <section>
+    <div class="container">
+      <span class="label">Building the Instrument</span>
+      <h2>Measure first, then change</h2>
+      <p>
+        Once sourcing was working for most users, a harder question remained: a few profiles -- very senior roles, niche markets -- were still thin. I needed to know whether that was a fixable query problem or a genuine limit of the data source, before deciding whether to take on a major architecture change.
+      </p>
+      <p>
+        So rather than guess, I built a set of deliberate test profiles modeling the specific edge cases real users had revealed, including a known-good control. Any future change could be measured against a clean before/after baseline rather than anecdote.
+      </p>
+      <p style="color: var(--text); font-weight: 600;">
+        Instrument first, then change, then measure against the instrument. That sequencing is the difference between "the number moved" and "the change worked."
+      </p>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section>
+    <div class="container">
+      <span class="label">What I'd Carry Into a Product Role</span>
+      <h2>Five things this project made permanent</h2>
+    </div>
+    <div class="container-wide">
+      <div class="principles-list">
+
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text">
+            <strong>Decisions before deliverables</strong>
+            The quality of what gets built is set at the spec, not the review. An ambiguous brief produces a confident, wrong output every time.
+          </div>
+        </div>
+
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text">
+            <strong>Verify against ground truth, not reports</strong>
+            Confident summaries -- from people or tools -- are not evidence. Live data is. I confirmed outcomes against the actual database state, the actual API response, the actual user's feed before calling anything done.
+          </div>
+        </div>
+
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text">
+            <strong>Distrust improvement that is only relative</strong>
+            A number that moved is not a number that is right. I repeatedly caught the pattern of declaring victory on a metric that had improved but was still far from where it needed to be.
+          </div>
+        </div>
+
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text">
+            <strong>Cheap reality-checks beat expensive investigations</strong>
+            A two-minute manual search on a job board redirected a multi-week architecture build. The fastest path to the right answer is often the most direct one.
+          </div>
+        </div>
+
+        <div class="principle">
+          <div class="principle-dot"></div>
+          <div class="principle-text">
+            <strong>Sequence the work to be measurable</strong>
+            Baseline, then change, then compare. Without the instrument in place first, you cannot tell whether the change worked or whether you got lucky.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- STACK -->
+  <section>
+    <div class="container">
+      <span class="label">For the Curious</span>
+      <h2>The stack</h2>
+      <p>Architected so the data layer is the single integration point between services -- no fragile runtime coupling between the AI scoring, the sourcing pipeline, and the frontend.</p>
+    </div>
+    <div class="container-wide">
+      <div class="stack-grid">
+        <div class="stack-item">
+          <div class="stack-label">Frontend</div>
+          <div class="stack-value">Next.js / React on Vercel</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-label">Auth & Data</div>
+          <div class="stack-value">Supabase / PostgreSQL</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-label">AI Scoring</div>
+          <div class="stack-value">Multi-pass Anthropic pipeline</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-label">Resume Parsing</div>
+          <div class="stack-value">Python service</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-label">Job Sourcing</div>
+          <div class="stack-value">Third-party API, daily pipeline</div>
+        </div>
+        <div class="stack-item">
+          <div class="stack-label">Model Selection</div>
+          <div class="stack-value">Validated against ground-truth test cases</div>
+        </div>
+      </div>
+      <div class="arch-note">
+        <strong>Architecture note:</strong> The data layer is the single integration point between services. The AI scoring pipeline, the job sourcing feed, and the frontend are decoupled -- no runtime dependency between them. Each can be changed or replaced without touching the others.
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <a href="/">← Back to Portfolio</a>
+    </div>
+  </footer>
+
+</body>
+</html>
