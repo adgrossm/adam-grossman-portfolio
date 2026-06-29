@@ -433,7 +433,7 @@
       <span class="label">Case Study</span>
       <h1>ScoreFit</h1>
       <p class="tagline">AI Job-Fit Scoring for Employed Professionals</p>
-      <p class="one-liner">I built and shipped a working AI product end to end as a solo founder -- not by writing every line myself, but by operating as the product and architecture layer directing a team of AI coding agents.</p>
+      <p class="one-liner">I built and shipped a working AI product end to end as a solo founder, not by writing every line myself, but by operating as the product and architecture layer directing a team of AI coding agents.</p>
       <div class="meta-pills">
         <span class="pill">Role: Founder, Product & Architecture</span>
         <span class="pill">Solo-built B2C SaaS</span>
@@ -451,23 +451,23 @@
         Employed professionals don't have time to read hundreds of listings to find the few worth pursuing. Existing tools either spray applications indiscriminately or bury the user in an unfiltered feed.
       </p>
       <p class="product-intro">
-        ScoreFit casts a wide net, scores sharply against the individual's real background, and lets the person decide. It recommends which resume version to use, tracks the application pipeline, and surfaces the roles worth pursuing -- without automating the decision itself.
+        ScoreFit casts a wide net, scores sharply against the individual's real background, and lets the person decide. It recommends which resume version to use, tracks the application pipeline, and surfaces the roles worth pursuing. The decision stays with the person.
       </p>
     </div>
 
     <div class="container-wide">
       <div class="gallery">
         <div class="gallery-hero">
-          <img src="/scorefit/sf-pipeline.png" alt="ScoreFit pipeline -- 79 active roles scored and organized across pipeline stages" />
+          <img src="/scorefit/sf-pipeline.png" alt="ScoreFit pipeline: 79 active roles scored and organized across pipeline stages" />
         </div>
         <div class="gallery-grid">
-          <img src="/scorefit/sf-score-input.png" alt="Score a job -- paste a job description and get a fit score in seconds" />
-          <img src="/scorefit/sf-score-result.png" alt="Scoring result -- fit score, resume recommendation, and capability analysis" />
-          <img src="/scorefit/sf-score-detail.png" alt="Detailed scoring breakdown -- strengths, gaps, and resume guidance" />
-          <img src="/scorefit/sf-job-detail.png" alt="Job detail -- Ask about this role and cover letter generation" />
+          <img src="/scorefit/sf-score-input.png" alt="Score a job: paste a job description and get a fit score in seconds" />
+          <img src="/scorefit/sf-score-result.png" alt="Scoring result: fit score, resume recommendation, and capability analysis" />
+          <img src="/scorefit/sf-score-detail.png" alt="Detailed scoring breakdown: strengths, gaps, and resume guidance" />
+          <img src="/scorefit/sf-job-detail.png" alt="Job detail: Ask about this role and cover letter generation" />
         </div>
         <div class="gallery-hero">
-          <img src="/scorefit/sf-email.png" alt="Daily email digest -- top matches scored and ranked, delivered every morning" />
+          <img src="/scorefit/sf-email.png" alt="Daily email digest: top matches scored and ranked, delivered every morning" />
         </div>
       </div>
     </div>
@@ -479,7 +479,7 @@
       <span class="label">How I Worked</span>
       <h2>The operating model</h2>
       <p>
-        This is the part most relevant to how I'd operate on a team. I positioned myself as the planning and architecture layer. Day to day, I made the product decisions, defined the architecture, and wrote precise specs -- then delegated implementation to AI coding agents running in parallel, each scoped to a non-overlapping part of the codebase. I reviewed and integrated everything myself.
+        This is the part most relevant to how I'd operate on a team. I positioned myself as the planning and architecture layer. Day to day, I made the product decisions, defined the architecture, and wrote precise specs, then delegated implementation to AI coding agents running in parallel, each scoped to a non-overlapping part of the codebase. I reviewed and integrated everything myself.
       </p>
       <p>
         That sounds like a force multiplier, and it is. But it only works with three disciplines I had to build deliberately.
@@ -492,7 +492,7 @@
           <div class="discipline-num">01</div>
           <div>
             <h3>Lock the decision before writing the spec</h3>
-            <p>Agents are eager to build. If I handed off an ambiguous problem, I got a confident, wrong implementation -- fast. So I forced every product and design decision to be settled in plain language before any implementation began. The spec is where the thinking happens. The build is mechanical.</p>
+            <p>Agents are eager to build. If I handed off an ambiguous problem, I got a confident, wrong implementation, fast. So I forced every product and design decision to be settled in plain language before any implementation began. The spec is where the thinking happens. The build is mechanical.</p>
           </div>
         </div>
 
@@ -500,7 +500,7 @@
           <div class="discipline-num">02</div>
           <div>
             <h3>Treat "done" and "verified" as untrustworthy by default</h3>
-            <p>An agent reporting "verified" means only "I checked what I thought to check." Repeatedly, the only reliable signal was live data -- the actual database state, the actual API response, the actual network request -- not the agent's description of it. I built a habit of confirming outcomes against ground truth before believing anything was fixed.</p>
+            <p>An agent reporting "verified" means only "I checked what I thought to check." Repeatedly, the only reliable signal was live data (the actual database state, the actual API response, the actual network request), not the agent's description of it. I built a habit of confirming outcomes against ground truth before believing anything was fixed.</p>
           </div>
         </div>
 
@@ -522,7 +522,7 @@
       <span class="label">A Representative Problem</span>
       <h2>The thin-feed investigation</h2>
       <p>
-        The clearest example of how this operating model pays off. Several beta testers were getting sparse job feeds despite the product sourcing from an index covering tens of thousands of company career sites. The obvious assumption was a coverage gap -- the data source simply didn't have the roles.
+        The clearest example of how this operating model pays off. Several beta testers were getting sparse job feeds despite the product sourcing from an index covering tens of thousands of company career sites. The obvious assumption was a coverage gap: the data source simply didn't have the roles.
       </p>
       <p>
         Rather than accept that, I ran a structured investigation, splitting it across agents along clean boundaries.
@@ -538,7 +538,7 @@
 
     <div class="container">
       <p style="margin-top: 32px;">
-        The result overturned my own initial theory. A simple external reality-check -- manually searching a major job board for the same titles -- returned over a hundred roles. The source had the inventory. The bug was ours.
+        The result overturned my own initial theory. A simple external reality-check (manually searching a major job board for the same titles) returned over a hundred roles. The source had the inventory. The bug was ours.
       </p>
       <p>
         The matching logic required job titles to appear in an exact, rigid word order. Real-world titles like "Director, Customer Support Systems" or "VP of Client Success" silently failed to match. A controlled test confirmed it: loosening the matching recovered the missing roles cleanly, with no increase in irrelevant results.
@@ -548,7 +548,7 @@
     <div class="container-wide">
       <div class="outcome">
         <div class="outcome-label">Outcome</div>
-        <p>The fix was a single change to the query logic. It improved feeds across the entire user base at once -- and it dissolved a much larger, more expensive plan I had been considering (integrating a second data source) that would have solved the wrong problem at permanent cost.</p>
+        <p>The fix was a single change to the query logic. It improved feeds across the entire user base at once, and it dissolved a much larger, more expensive plan I had been considering (integrating a second data source) that would have solved the wrong problem at permanent cost.</p>
       </div>
     </div>
 
@@ -565,7 +565,7 @@
       <span class="label">Building the Instrument</span>
       <h2>Measure first, then change</h2>
       <p>
-        Once sourcing was working for most users, a harder question remained: a few profiles -- very senior roles, niche markets -- were still thin. I needed to know whether that was a fixable query problem or a genuine limit of the data source, before deciding whether to take on a major architecture change.
+        Once sourcing was working for most users, a harder question remained: a few profiles (very senior roles, niche markets) were still thin. I needed to know whether that was a fixable query problem or a genuine limit of the data source, before deciding whether to take on a major architecture change.
       </p>
       <p>
         So rather than guess, I built a set of deliberate test profiles modeling the specific edge cases real users had revealed, including a known-good control. Any future change could be measured against a clean before/after baseline rather than anecdote.
@@ -597,7 +597,7 @@
           <div class="principle-dot"></div>
           <div class="principle-text">
             <strong>Verify against ground truth, not reports</strong>
-            Confident summaries -- from people or tools -- are not evidence. Live data is. I confirmed outcomes against the actual database state, the actual API response, the actual user's feed before calling anything done.
+            Confident summaries, from people or tools, are not evidence. Live data is. I confirmed outcomes against the actual database state, the actual API response, the actual user's feed before calling anything done.
           </div>
         </div>
 
@@ -634,7 +634,7 @@
     <div class="container">
       <span class="label">For the Curious</span>
       <h2>The stack</h2>
-      <p>Architected so the data layer is the single integration point between services -- no fragile runtime coupling between the AI scoring, the sourcing pipeline, and the frontend.</p>
+      <p>Architected so the data layer is the single integration point between services, with no fragile runtime coupling between the AI scoring, the sourcing pipeline, and the frontend.</p>
     </div>
     <div class="container-wide">
       <div class="stack-grid">
@@ -664,7 +664,7 @@
         </div>
       </div>
       <div class="arch-note">
-        <strong>Architecture note:</strong> The data layer is the single integration point between services. The AI scoring pipeline, the job sourcing feed, and the frontend are decoupled -- no runtime dependency between them. Each can be changed or replaced without touching the others.
+        <strong>Architecture note:</strong> The data layer is the single integration point between services. The AI scoring pipeline, the job sourcing feed, and the frontend are decoupled, with no runtime dependency between them. Each can be changed or replaced without touching the others.
       </div>
     </div>
   </section>
